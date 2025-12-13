@@ -6,7 +6,7 @@ const ITEM_STORAGE_KEY = 'donatedItems';
 const donationForm = document.getElementById('donation-form');
 const itemImageInput = document.getElementById('itemImage');
 const imagePreviewDiv = document.getElementById('imagePreview');
-const itemListDiv = document.getElementById('item-list'); // 主列表容器
+const itemListDiv = document.getElementById('item-list'); 
 const successModal = document.getElementById('success-modal');
 const modalClose = document.getElementById('modalClose');
 const modalBack = document.getElementById('modalBack');
@@ -18,7 +18,7 @@ const navbar = document.getElementById('main-navbar');
 const hero = document.querySelector('.hero');
 const heroDecor1 = document.querySelector('.decor-1');
 const heroDecor2 = document.querySelector('.decor-2');
-const featuredListDiv = document.getElementById('featured-list'); // 精選列表容器
+const featuredListDiv = document.getElementById('featured-list'); 
 
 let currentBase64Image = null;
 
@@ -43,7 +43,6 @@ function renderItems(items, container) {
 
     if (items.length === 0) {
         
-        // 檢查是否是搜尋或篩選結果為空
         let message = 'No donated items available yet.';
         if (container.id === 'item-list') {
             const hasFilterOrSearch = (document.querySelector('.filters button.active') && document.querySelector('.filters button.active').getAttribute('data-category') !== 'All') || (searchInput && searchInput.value.length > 0);
@@ -62,6 +61,12 @@ function renderItems(items, container) {
     items.forEach(item => {
         const card = document.createElement('div');
         card.classList.add('item-card');
+        
+        // 確保新渲染的卡片也有淡入動畫的類別
+        if (container.id !== 'featured-list') {
+            // Featured 區塊會在 DOMContentLoaded 時處理所有卡片淡入，這裡只處理主列表
+            card.classList.add('invisible'); 
+        }
 
         const imageUrl = item.image ? item.image : 'placeholder.jpg';
         const isFeatured = item.featured === 'yes';
@@ -80,6 +85,11 @@ function renderItems(items, container) {
         `;
         container.appendChild(card);
     });
+    
+    // 如果是主列表，需要重新對新元素設定觀察器
+    if (container.id === 'item-list') {
+        setupFadeInOnScroll();
+    }
 }
 
 // =======================================================
@@ -89,9 +99,9 @@ function renderFeaturedItems() {
     if (!featuredListDiv) return;
 
     const items = getItems();
-    // 只顯示標註 featured: yes 的前 3 個項目
-    const featuredItems = items.filter(item => item.featured === 'yes').slice(0, 3); 
+    const featuredItems = items.filter(item => item.featured === 'yes'); 
 
+    // 注意：這裡不強制限制 3 個，讓水平滾動條可以展示更多
     renderItems(featuredItems, featuredListDiv); 
 }
 
@@ -106,7 +116,7 @@ if (itemImageInput && imagePreviewDiv) {
 
         if (file) {
             imagePreviewDiv.innerHTML = '';
-            imagePreviewDiv.style.border = '2px dashed #4CAF50'; // 載入中動畫
+            imagePreviewDiv.style.border = '2px dashed #4CAF50'; 
 
             if (!file.type.startsWith('image/')) {
                 imagePreviewDiv.innerHTML = '<p class="error-text">Please upload a valid image file.</p>';
@@ -125,13 +135,13 @@ if (itemImageInput && imagePreviewDiv) {
                 img.classList.add('preview-image');
 
                 imagePreviewDiv.appendChild(img);
-                imagePreviewDiv.style.border = 'none'; // 載入成功，移除邊框
+                imagePreviewDiv.style.border = 'none'; 
             };
 
             reader.readAsDataURL(file);
         } else {
             imagePreviewDiv.innerHTML = '';
-            imagePreviewDiv.style.border = '2px dashed var(--color-border)'; // 恢復邊框
+            imagePreviewDiv.style.border = '2px dashed var(--color-border)'; 
         }
     });
 }
@@ -174,7 +184,7 @@ if (donationForm) {
         // Reset form
         donationForm.reset();
         imagePreviewDiv.innerHTML = '';
-        imagePreviewDiv.style.border = '2px dashed var(--color-border)'; // 恢復邊框
+        imagePreviewDiv.style.border = '2px dashed var(--color-border)'; 
         currentBase64Image = null;
 
         // Show modal
@@ -237,11 +247,11 @@ function filterAndSearchItems(category, keyword) {
         items = items.filter(i => 
             i.itemName.toLowerCase().includes(lowerKeyword) || 
             i.description.toLowerCase().includes(lowerKeyword) ||
-            i.tags.some(tag => tag.toLowerCase().includes(lowerKeyword)) // 新增標籤搜尋
+            i.tags.some(tag => tag.toLowerCase().includes(lowerKeyword)) 
         );
     }
 
-    renderItems(items, itemListDiv); // 渲染到主列表
+    renderItems(items, itemListDiv); 
 }
 
 
@@ -250,7 +260,6 @@ function filterAndSearchItems(category, keyword) {
 // =======================================================
 function setupStickyNav() {
     if (navbar && hero) {
-        // 等待 hero 元素完全載入以計算正確高度
         window.addEventListener('load', () => {
             const stickyOffset = hero.offsetHeight; 
             window.addEventListener('scroll', () => {
@@ -272,9 +281,7 @@ function setupHeroParallax() {
         window.addEventListener('scroll', () => {
             const scrollDistance = window.scrollY;
 
-            // 裝飾 1 慢速向下移動
             heroDecor1.style.transform = `translateY(${scrollDistance * 0.2}px)`; 
-            // 裝飾 2 慢速向上移動 (製造景深差異)
             heroDecor2.style.transform = `translateY(${scrollDistance * -0.1}px)`; 
         });
     }
@@ -283,14 +290,21 @@ function setupHeroParallax() {
 // =======================================================
 // Intersection Observer (物件滾動偵測與淡入)
 // =======================================================
+let observer;
+
 function setupFadeInOnScroll() {
+    // 如果觀察器已經存在，先清除舊的觀察者，以處理新加載的元素
+    if (observer) {
+        observer.disconnect();
+    }
+
     const observerOptions = {
         root: null, 
         rootMargin: '0px',
         threshold: 0.1 
     };
 
-    const observer = new IntersectionObserver((entries, observer) => {
+    observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.remove('invisible');
@@ -302,12 +316,16 @@ function setupFadeInOnScroll() {
 
     // 取得所有要做淡入效果的元素
     const elementsToAnimate = document.querySelectorAll(
-        '.feature-card, .story-card, .about-item, .item-card'
+        // 排除 Featured 區塊的卡片，因為它們通常不需要延遲載入 (除非它們滾出螢幕)
+        '.feature-card, .story-card, .about-item, #item-list .item-card'
     );
 
     elementsToAnimate.forEach(el => {
-        el.classList.add('invisible'); 
-        observer.observe(el);
+        // 只有還沒有被設定為可見的元素才需要重新觀察
+        if (!el.classList.contains('visible')) {
+             el.classList.add('invisible'); 
+             observer.observe(el);
+        }
     });
 }
 
