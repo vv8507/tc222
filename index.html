@@ -1,397 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Donation Sharing Platform</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donation Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+:root {
+    --primary: #52b788; --primary-dark: #37926b; --secondary: #ffadad;
+    --bg: #f7f7f7; --card-bg: #fff; --text-dark: #333; --border: #e0e0e0;
+    --font: 'Quicksand', sans-serif;
+}
+* {box-sizing:border-box;margin:0;padding:0;}
+body {font-family:var(--font);line-height:1.6;color:var(--text-dark);background:var(--bg);}
+h1,h2,h3,h4 {color:var(--primary-dark);}
+a {text-decoration:none;color:var(--primary);}
+.section {padding:50px 5%;max-width:1000px;margin:0 auto;}
+.section-title {text-align:center;margin-bottom:30px;font-size:2em;}
+.grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.btn {padding:8px 15px;border-radius:5px;font-weight:600;cursor:pointer;text-align:center;}
+.btn.primary {background:var(--primary);color:#fff;border:2px solid var(--primary);}
+.btn.primary:hover {background:var(--primary-dark);border-color:var(--primary-dark);}
+.btn.outline {background:transparent;color:var(--primary);border:2px solid var(--primary);}
+.btn.outline:hover {background:var(--primary);color:#fff;}
+.form {max-width:600px;margin:0 auto;padding:20px;background:var(--card-bg);border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,0.1);}
+.form-group {margin-bottom:10px;}
+.form-group label {display:block;margin-bottom:5px;font-weight:600;}
+.form-group input, .form-group select, .form-group textarea {width:100%;padding:8px;border:1px solid var(--border);border-radius:5px;}
+.form-row {display:flex;gap:10px;}
+.item-card {background:var(--card-bg);padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+.item-image-wrap {height:150px;overflow:hidden;text-align:center;margin-bottom:10px;}
+.item-image-wrap img {max-width:100%;max-height:150px;object-fit:contain;}
+.item-info h4 {margin-bottom:5px;font-size:1.1em;}
+.image-preview {margin-top:10px;border:2px dashed var(--border);min-height:150px;border-radius:5px;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#fff;}
+.preview-image {max-width:100%;max-height:150px;object-fit:contain;}
+.modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);justify-content:center;align-items:center;}
+.modal-content {background:#fff;padding:20px;border-radius:10px;max-width:400px;width:90%;text-align:center;position:relative;}
+.modal-close {position:absolute;top:10px;right:15px;font-size:20px;font-weight:bold;background:none;border:none;cursor:pointer;color:#aaa;}
+.modal-close:hover {color:#333;}
+.modal h3 {margin-bottom:10px;}
+.modal-actions {display:flex;justify-content:center;gap:10px;margin-top:10px;}
+</style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div id="auth-section" class="auth-section">
-  <div id="login-form">
-    <h3>Login</h3>
-    <input type="email" id="login-email" placeholder="Email" />
-    <input type="password" id="login-password" placeholder="Password" />
-    <button id="login-btn" class="btn primary">Login</button>
-    <p>or <span id="show-register">Register</span></p>
-  </div>
-  <div id="register-form" style="display:none;">
-    <h3>Register</h3>
-    <input type="text" id="reg-name" placeholder="Name" />
-    <input type="email" id="reg-email" placeholder="Email" />
-    <input type="password" id="reg-password" placeholder="Password" />
-    <button id="register-btn" class="btn primary">Register</button>
-    <p>or <span id="show-login">Login</span></p>
-  </div>
-  <div id="user-info" style="display:none;">
-    <p>Hello, <span id="user-name"></span>! <button id="logout-btn" class="btn outline">Logout</button></p>
-    <button id="view-applications" class="btn outline">View Borrow Applications</button>
-  </div>
+<section class="section" id="donate">
+<h2 class="section-title">Donate an Item</h2>
+<form id="donation-form" class="form">
+<div class="form-group"><label>Item Name *</label><input name="itemName" required type="text" placeholder="Cozy winter jacket"></div>
+<div class="form-row">
+<div class="form-group"><label>Category *</label><select name="category" required><option value="">Select</option><option>Books</option><option>Appliances</option><option>Apparel</option><option>Others</option></select></div>
+<div class="form-group"><label>Condition</label><select name="condition"><option>Good</option><option>Like New</option><option>Fair</option></select></div>
+</div>
+<div class="form-group"><label>Description *</label><textarea name="description" required rows="3" placeholder="Describe the item..."></textarea></div>
+<div class="form-group"><label>Upload Image *</label><input id="itemImage" name="itemImage" type="file" accept="image/*" required>
+<div id="imagePreview" class="image-preview"></div></div>
+<button type="submit" class="btn primary full">Donate</button>
+</form>
+</section>
+
+<section class="section" id="items">
+<h2 class="section-title">Available Items</h2>
+<div id="item-list" class="grid"></div>
+<button id="viewApplicationsBtn" class="btn outline">View Borrow Applications</button>
+</section>
+
+<div id="applicationsModal" class="modal">
+<div class="modal-content">
+<button class="modal-close" id="closeModal">&times;</button>
+<h3>Borrow Applications</h3>
+<div id="application-list"></div>
+</div>
 </div>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-content">
-    <h1>Donation Sharing Platform</h1>
-    <p class="subtitle">Give unused items a second life — help your community, reduce waste.</p>
-    <div class="hero-actions">
-      <a href="#donate" class="btn primary">Start Donating</a>
-      <a href="#items" class="btn outline">Browse Items</a>
-    </div>
-  </div>
-  <div class="hero-decor decor-1"></div>
-  <div class="hero-decor decor-2"></div>
-</header>
+<script>
+const ITEM_STORAGE_KEY='donatedItems';
+const APPLICATION_STORAGE_KEY='borrowApplications';
+const donationForm=document.getElementById('donation-form');
+const itemImageInput=document.getElementById('itemImage');
+const imagePreviewDiv=document.getElementById('imagePreview');
+const itemListDiv=document.getElementById('item-list');
+let currentBase64Image=null;
 
-<!-- NAV -->
-<nav class="navbar">
-  <ul>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#items">Items</a></li>
-    <li><a href="#donate">Donate</a></li>
-    <li><a href="#stories">Stories</a></li>
-    <li><a href="#about">About</a></li>
-  </ul>
-</nav>
+function getItems(){const data=localStorage.getItem(ITEM_STORAGE_KEY);return data?JSON.parse(data):[];}
+function saveItems(items){localStorage.setItem(ITEM_STORAGE_KEY,JSON.stringify(items));}
+function getApplications(){const data=localStorage.getItem(APPLICATION_STORAGE_KEY);return data?JSON.parse(data):[];}
+function saveApplications(apps){localStorage.setItem(APPLICATION_STORAGE_KEY,JSON.stringify(apps));}
 
-<main>
+function renderItems(items){
+itemListDiv.innerHTML='';
+if(items.length===0){itemListDiv.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#888;">No donated items yet.</p>';return;}
+items.forEach(item=>{
+const card=document.createElement('div');card.classList.add('item-card');
+card.innerHTML=`<div class="item-image-wrap"><img src="${item.image}" alt="${item.itemName}" class="item-image"/></div>
+<div class="item-info"><h4>${item.itemName} (${item.condition})</h4><p>Category: <strong>${item.category}</strong></p>
+<p class="item-description">${item.description.substring(0,50)}...</p>
+<button class="btn outline borrow-btn" data-item="${item.itemName}">Apply to Borrow</button></div>`;
+itemListDiv.appendChild(card);
+});}
 
-  <!-- FEATURES -->
-  <section id="features" class="section">
-    <h2 class="section-title">Why choose our platform?</h2>
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🌱</div>
-        <h3>Reduce Waste</h3>
-        <p>Give items another life and reduce landfill waste.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🤝</div>
-        <h3>Help Community</h3>
-        <p>Connect donors with people who truly need them nearby.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">⚡</div>
-        <h3>Fast & Easy</h3>
-        <p>Upload, describe and your item is discoverable instantly.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🔒</div>
-        <h3>Safe & Trusted</h3>
-        <p>Simple moderation & community feedback keep things secure.</p>
-      </div>
-    </div>
-  </section>
+if(itemImageInput&&imagePreviewDiv){
+itemImageInput.addEventListener('change',function(e){
+const file=e.target.files[0];currentBase64Image=null;
+if(file){imagePreviewDiv.innerHTML='';
+if(!file.type.startsWith('image/')){imagePreviewDiv.innerHTML='<p style="color:red;">Please upload a valid image file.</p>';return;}
+const reader=new FileReader();
+reader.onload=function(e){currentBase64Image=e.target.result;
+const img=document.createElement('img');img.src=currentBase64Image;img.classList.add('preview-image');imagePreviewDiv.appendChild(img);}
+reader.readAsDataURL(file);}else{imagePreviewDiv.innerHTML='';}});}
 
-  <!-- ITEMS -->
-  <section id="items" class="section">
-    <h2 class="section-title">Available Items</h2>
+if(donationForm){
+donationForm.addEventListener('submit',function(e){
+e.preventDefault();
+if(!currentBase64Image){alert("Please wait for image to load.");return;}
+const formData=new FormData(donationForm);
+const newItem={itemName:formData.get('itemName'),category:formData.get('category'),condition:formData.get('condition'),description:formData.get('description'),image:currentBase64Image};
+const items=getItems();items.push(newItem);saveItems(items);donationForm.reset();imagePreviewDiv.innerHTML='';currentBase64Image=null;renderItems(getItems());alert("Item added!");});}
 
-    <div class="controls">
-      <div class="filters">
-        <button class="filter active" data-category="All">All</button>
-        <button class="filter" data-category="Books">Books</button>
-        <button class="filter" data-category="Appliances">Appliances</button>
-        <button class="filter" data-category="Apparel">Apparel</button>
-        <button class="filter" data-category="Others">Others</button>
-      </div>
+document.addEventListener('click',function(e){
+if(e.target.classList.contains('borrow-btn')){
+const itemName=e.target.dataset.item;
+const modal=document.getElementById('applicationsModal');modal.style.display='flex';
+const name=prompt(`Enter your name to apply for "${itemName}":`);
+if(!name)return;
+const apps=getApplications();apps.push({itemName,applicant:name,date:new Date().toLocaleString()});saveApplications(apps);
+renderApplications();
+alert(`Application submitted for "${itemName}"!`);}});
 
-      <div class="search-wrap">
-        <input id="searchInput" placeholder="Search items / description..." />
-      </div>
-    </div>
+function renderApplications(){
+const list=document.getElementById('application-list');
+list.innerHTML='';const apps=getApplications();if(apps.length===0){list.innerHTML='<p>No applications yet.</p>';return;}
+apps.slice().reverse().forEach(a=>{const div=document.createElement('div');div.style.borderBottom='1px solid #ccc';div.style.padding='5px 0';div.innerHTML=`<strong>${a.itemName}</strong> by ${a.applicant} <small>${a.date}</small>`;list.appendChild(div);});}
 
-    <!-- Items container with border -->
-    <div id="item-list-container" class="item-list-container">
-      <div id="item-list" class="grid"></div>
-    </div>
-  </section>
+document.getElementById('viewApplicationsBtn').addEventListener('click',function(){
+document.getElementById('applicationsModal').style.display='flex';renderApplications();});
+document.getElementById('closeModal').addEventListener('click',function(){document.getElementById('applicationsModal').style.display='none';});
 
-  <!-- DONATE -->
-  <section id="donate" class="section donate-section">
-    <h2 class="section-title">Donate an Item</h2>
-
-    <form id="donation-form" class="form">
-      <div class="form-group">
-        <label>Item Name *</label>
-        <input name="itemName" required type="text" placeholder="e.g. Cozy winter jacket" />
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Category *</label>
-          <select name="category" required>
-            <option value="">Select category</option>
-            <option value="Books">Books</option>
-            <option value="Appliances">Appliances</option>
-            <option value="Apparel">Apparel</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Condition</label>
-          <select name="condition">
-            <option value="Good">Good</option>
-            <option value="Like New">Like New</option>
-            <option value="Fair">Fair</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Description *</label>
-        <textarea name="description" required rows="4" placeholder="Describe the item, size, defects, etc."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Upload Image *</label>
-        <input id="itemImage" name="itemImage" accept="image/*" required type="file" />
-        <div id="imagePreview" class="image-preview"></div>
-      </div>
-
-      <div class="form-row small">
-        <div class="form-group">
-          <label>Tags (comma separated)</label>
-          <input name="tags" placeholder="e.g. winter, jacket, men" />
-        </div>
-        <div class="form-group">
-          <label>Mark as Featured</label>
-          <select name="featured">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" class="btn primary full">Donate & Add</button>
-    </form>
-  </section>
-
-  <!-- STORIES -->
-  <section id="stories" class="section">
-    <h2 class="section-title">Community Stories</h2>
-    <div class="stories-grid">
-      <div class="story-card fade-in">
-        <h4>📚 Books for students</h4>
-        <p>"We donated school books and the teacher was moved to tears — thank you!" — Lina</p>
-      </div>
-      <div class="story-card fade-in">
-        <h4>🧥 Warm coats</h4>
-        <p>"My old coats warmed three families this winter." — Ken</p>
-      </div>
-      <div class="story-card fade-in">
-        <h4>🍳 Kitchen help</h4>
-        <p>"A donated blender saved time for a community kitchen." — Mei</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="section">
-    <h2 class="section-title">About Us</h2>
-    <div class="about-content">
-      <div class="about-item fade-in">
-        <h3>Our Mission</h3>
-        <p>We reduce waste by connecting generous donors with people in need.</p>
-      </div>
-      <div class="about-item fade-in">
-        <h3>How it works</h3>
-        <p>Upload your item, add a short description and image, then wait for local requests.</p>
-      </div>
-      <div class="about-item fade-in">
-        <h3>Join Us</h3>
-        <p>Be part of a growing community that makes reuse easy and trusted.</p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- SUCCESS MODAL -->
-<div id="success-modal" class="modal">
-  <div class="modal-content">
-    <button class="modal-close" id="modalClose">&times;</button>
-    <h3>✅ Donation submitted</h3>
-    <p>Your item is now listed — thank you for donating!</p>
-    <div class="modal-actions">
-      <a class="btn primary" id="modalBack">Back to site</a>
-      <
-<main>
-
-  <!-- FEATURES -->
-  <section id="features" class="section">
-    <h2 class="section-title">Why choose our platform?</h2>
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🌱</div>
-        <h3>Reduce Waste</h3>
-        <p>Give items another life and reduce landfill waste.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🤝</div>
-        <h3>Help Community</h3>
-        <p>Connect donors with people who truly need them nearby.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">⚡</div>
-        <h3>Fast & Easy</h3>
-        <p>Upload, describe and your item is discoverable instantly.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🔒</div>
-        <h3>Safe & Trusted</h3>
-        <p>Simple moderation & community feedback keep things secure.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ITEMS -->
-  <section id="items" class="section">
-    <h2 class="section-title">Available Items</h2>
-
-    <div class="controls">
-      <div class="filters">
-        <button class="filter active" data-category="All">All</button>
-        <button class="filter" data-category="Books">Books</button>
-        <button class="filter" data-category="Appliances">Appliances</button>
-        <button class="filter" data-category="Apparel">Apparel</button>
-        <button class="filter" data-category="Others">Others</button>
-      </div>
-
-      <div class="search-wrap">
-        <input id="searchInput" placeholder="Search items / description..." />
-      </div>
-    </div>
-
-    <div id="item-list" class="grid"></div>
-  </section>
-
-  <!-- DONATE -->
-  <section id="donate" class="section donate-section">
-    <h2 class="section-title">Donate an Item</h2>
-
-    <form id="donation-form" class="form">
-      <div class="form-group">
-        <label>Item Name *</label>
-        <input name="itemName" required type="text" placeholder="e.g. Cozy winter jacket" />
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Category *</label>
-          <select name="category" required>
-            <option value="">Select category</option>
-            <option value="Books">Books</option>
-            <option value="Appliances">Appliances</option>
-            <option value="Apparel">Apparel</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Condition</label>
-          <select name="condition">
-            <option value="Good">Good</option>
-            <option value="Like New">Like New</option>
-            <option value="Fair">Fair</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Description *</label>
-        <textarea name="description" required rows="4" placeholder="Describe the item, size, defects, etc."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Upload Image *</label>
-        <input id="itemImage" name="itemImage" accept="image/*" required type="file" />
-        <div id="imagePreview" class="image-preview"></div>
-      </div>
-
-      <div class="form-row small">
-        <div class="form-group">
-          <label>Tags (comma separated)</label>
-          <input name="tags" placeholder="e.g. winter, jacket, men" />
-        </div>
-        <div class="form-group">
-          <label>Mark as Featured</label>
-          <select name="featured">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" class="btn primary full">Donate & Add</button>
-    </form>
-  </section>
-
-  <!-- STORIES -->
-  <section id="stories" class="section">
-    <h2 class="section-title">Community Stories</h2>
-    <div class="stories-grid">
-      <div class="story-card fade-in">
-        <h4>📚 Books for students</h4>
-        <p>"We donated school books and the teacher was moved to tears — thank you!" — Lina</p>
-      </div>
-      <div class="story-card fade-in">
-        <h4>🧥 Warm coats</h4>
-        <p>"My old coats warmed three families this winter." — Ken</p>
-      </div>
-      <div class="story-card fade-in">
-        <h4>🍳 Kitchen help</h4>
-        <p>"A donated blender saved time for a community kitchen." — Mei</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="section">
-    <h2 class="section-title">About Us</h2>
-    <div class="about-content">
-      <div class="about-item fade-in">
-        <h3>Our Mission</h3>
-        <p>We reduce waste by connecting generous donors with people in need.</p>
-      </div>
-      <div class="about-item fade-in">
-        <h3>How it works</h3>
-        <p>Upload your item, add a short description and image, then wait for local requests.</p>
-      </div>
-      <div class="about-item fade-in">
-        <h3>Join Us</h3>
-        <p>Be part of a growing community that makes reuse easy and trusted.</p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- SUCCESS MODAL -->
-<div id="success-modal" class="modal">
-  <div class="modal-content">
-    <button class="modal-close" id="modalClose">&times;</button>
-    <h3>✅ Donation submitted</h3>
-    <p>Your item is now listed — thank you for donating!</p>
-    <div class="modal-actions">
-      <a class="btn primary" id="modalBack">Back to site</a>
-      <a class="btn outline" href="success.html" id="modalGoto">Go to Success Page</a>
-    </div>
-  </div>
-</div>
-
-<footer class="footer">
-  <div class="footer-inner">
-    <p>© 2025 Donation Sharing Platform — Built with care.</p>
-    <small>Data stored locally (localStorage). Replace with API to persist server-side.</small>
-  </div>
-</footer>
-
-<script src="script.js"></script>
+renderItems(getItems());
+</script>
 </body>
-
 </html>
