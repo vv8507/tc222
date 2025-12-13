@@ -3,6 +3,7 @@ const donationForm = document.getElementById('donation-form');
 const itemImageInput = document.getElementById('itemImage');
 const imagePreviewDiv = document.getElementById('imagePreview');
 const itemListDiv = document.getElementById('item-list');
+const cartCount = document.getElementById('cart-count');
 
 let currentBase64Image = null; 
 
@@ -19,13 +20,23 @@ function renderItems(items) {
     if(!itemListDiv) return;
     itemListDiv.innerHTML = '';
     if(items.length===0){ itemListDiv.innerHTML='<p>No donated items yet.</p>'; return;}
-    items.forEach(item=>{
-        const card=document.createElement('div'); card.classList.add('item-card');
+    items.forEach((item, index)=>{
+        const card=document.createElement('div'); 
+        card.classList.add('item-card');
         const imageUrl = item.image ? item.image : 'placeholder.jpg';
         card.innerHTML=`<div class="item-image-wrap"><img src="${imageUrl}" alt="${item.itemName}" class="item-image" /></div>
-        <div class="item-info"><h4>${item.itemName} (${item.condition})</h4><p>Category: <strong>${item.category}</strong></p><p>${item.description.substring(0,50)}...</p></div>`;
+        <div class="item-info"><h4>${item.itemName} (${item.condition})</h4><p>Category: <strong>${item.category}</strong></p><p>${item.description.substring(0,50)}...</p>
+        <button class="btn primary" onclick="addToCart(${index})">Add to Cart</button>
+        </div>`;
         itemListDiv.appendChild(card);
     });
+}
+
+function addToCart(index){
+    let itemsInCart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
+    itemsInCart.push(index);
+    localStorage.setItem('cart', JSON.stringify(itemsInCart));
+    cartCount.innerText = itemsInCart.length;
 }
 
 if(itemImageInput && imagePreviewDiv){
@@ -56,5 +67,9 @@ if(donationForm){
         alert("Item added!");
     });
 }
+
+// Initialize cart count
+let itemsInCart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
+cartCount.innerText = itemsInCart.length;
 
 renderItems(getItems());
