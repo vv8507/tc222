@@ -1,210 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Donation Sharing Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+// =======================================================
+// 全域變數
+// =======================================================
+const ITEM_STORAGE_KEY = 'donatedItems';
+const donationForm = document.getElementById('donation-form');
+const itemImageInput = document.getElementById('itemImage');
+const imagePreviewDiv = document.getElementById('imagePreview');
+const itemListDiv = document.getElementById('item-list');
+const successModal = document.getElementById('success-modal');
+const modalClose = document.getElementById('modalClose');
+const modalBack = document.getElementById('modalBack');
+const searchInput = document.getElementById('searchInput');
+const filterButtons = document.querySelectorAll('.filter');
 
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-content">
-    <h1>Donation Sharing Platform</h1>
-    <p class="subtitle">Give unused items a second life — help your community, shrink waste.</p>
-    <div class="hero-actions">
-      <a href="#donate" class="btn primary">Start Donating</a>
-      <a href="#items" class="btn outline">Browse Items</a>
-    </div>
-  </div>
-  <div class="hero-decor decor-1"></div>
-  <div class="hero-decor decor-2"></div>
-</header>
+let currentBase64Image = null;
 
-<!-- NAV -->
-<nav class="navbar">
-  <ul>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#items">Items</a></li>
-    <li><a href="#donate">Donate</a></li>
-    <li><a href="#stories">Stories</a></li>
-    <li><a href="#about">About</a></li>
-  </ul>
-</nav>
+// =======================================================
+// 讀取與儲存
+// =======================================================
+function getItems() {
+    const data = localStorage.getItem(ITEM_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
 
-<main>
+function saveItems(items) {
+    localStorage.setItem(ITEM_STORAGE_KEY, JSON.stringify(items));
+}
 
-  <!-- FEATURES -->
-  <section id="features" class="section">
-    <h2 class="section-title">Why choose our platform?</h2>
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🌱</div>
-        <h3>Reduce Waste</h3>
-        <p>Give items another life and reduce landfill waste.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🤝</div>
-        <h3>Help Community</h3>
-        <p>Connect donors with people who truly need them nearby.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">⚡</div>
-        <h3>Fast & Easy</h3>
-        <p>Upload, describe and your item is discoverable instantly.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-emoji">🔒</div>
-        <h3>Safe & Trusted</h3>
-        <p>Simple moderation & community feedback keep things secure.</p>
-      </div>
-    </div>
-  </section>
+// =======================================================
+// 渲染
+// =======================================================
+function renderItems(items) {
+    if (!itemListDiv) return;
+    itemListDiv.innerHTML = '';
 
-  <!-- ITEMS -->
-  <section id="items" class="section">
-    <h2 class="section-title">Available Items</h2>
+    if (items.length === 0) {
+        itemListDiv.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #888;">No donated items available yet.</p>';
+        return;
+    }
 
-    <div class="controls">
-      <div class="filters">
-        <button class="filter active" data-category="All">All</button>
-        <button class="filter" data-category="Books">Books</button>
-        <button class="filter" data-category="Appliances">Appliances</button>
-        <button class="filter" data-category="Apparel">Apparel</button>
-        <button class="filter" data-category="Others">Others</button>
-      </div>
+    items.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('item-card');
+        card.innerHTML = `
+            <div class="item-image-wrap">
+                <img src="${item.image ? item.image : 'placeholder.jpg'}" alt="${item.itemName}" class="item-image" />
+            </div>
+            <div class="item-info">
+                <h4>${item.itemName} (${item.condition})</h4>
+                <p>Category: <strong>${item.category}</strong></p>
+                <p class="item-description">${item.description.substring(0,50)}...</p>
+                <p><strong>Tags:</strong> ${item.tags}</p>
+                <p><strong>Featured:</strong> ${item.featured}</p>
+            </div>
+        `;
+        itemListDiv.appendChild(card);
+    });
+}
 
-      <div class="search-wrap">
-        <input id="searchInput" placeholder="Search items / description..." />
-      </div>
-    </div>
+// =======================================================
+// 圖片預覽
+// =======================================================
+if (itemImageInput && imagePreviewDiv) {
+    itemImageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        currentBase64Image = null;
+        imagePreviewDiv.innerHTML = '';
 
-    <div id="item-list" class="grid"></div>
-  </section>
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            imagePreviewDiv.innerHTML = '<p class="error-text">Please upload a valid image file.</p>';
+            return;
+        }
 
-  <!-- DONATE -->
-  <section id="donate" class="section donate-section">
-    <h2 class="section-title">Donate an Item</h2>
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentBase64Image = e.target.result;
+            const img = document.createElement('img');
+            img.src = currentBase64Image;
+            img.alt = "Item Preview";
+            img.classList.add('preview-image');
+            imagePreviewDiv.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
-    <form id="donation-form" class="form">
-      <div class="form-group">
-        <label>Item Name *</label>
-        <input name="itemName" required type="text" placeholder="e.g. Cozy winter jacket" />
-      </div>
+// =======================================================
+// 表單提交
+// =======================================================
+if (donationForm) {
+    donationForm.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>Category *</label>
-          <select name="category" required>
-            <option value="">Select category</option>
-            <option value="Books">Books</option>
-            <option value="Appliances">Appliances</option>
-            <option value="Apparel">Apparel</option>
-            <option value="Others">Others</option>
-          </select>
-        </div>
+        if (!currentBase64Image) {
+            alert("Please wait for the image to load or select a file.");
+            return;
+        }
 
-        <div class="form-group">
-          <label>Condition</label>
-          <select name="condition">
-            <option value="Good">Good</option>
-            <option value="Like New">Like New</option>
-            <option value="Fair">Fair</option>
-          </select>
-        </div>
-      </div>
+        const formData = new FormData(donationForm);
+        const newItem = {
+            itemName: formData.get('itemName'),
+            category: formData.get('category'),
+            condition: formData.get('condition'),
+            description: formData.get('description'),
+            image: currentBase64Image,
+            tags: formData.get('tags') || '',
+            featured: formData.get('featured') || 'no'
+        };
 
-      <div class="form-group">
-        <label>Description *</label>
-        <textarea name="description" required rows="4" placeholder="Describe the item, size, defects, etc."></textarea>
-      </div>
+        const items = getItems();
+        items.push(newItem);
+        saveItems(items);
+        renderItems(items);
+        donationForm.reset();
+        currentBase64Image = null;
+        imagePreviewDiv.innerHTML = '';
+        successModal.style.display = 'flex';
+    });
+}
 
-      <div class="form-group">
-        <label>Upload Image *</label>
-        <input id="itemImage" name="itemImage" accept="image/*" required type="file" />
-        <div id="imagePreview" class="image-preview"></div>
-      </div>
+// =======================================================
+// Modal 控制
+// =======================================================
+if (modalClose) {
+    modalClose.addEventListener('click', () => successModal.style.display = 'none');
+}
+if (modalBack) {
+    modalBack.addEventListener('click', () => successModal.style.display = 'none');
+}
 
-      <div class="form-row small">
-        <div class="form-group">
-          <label>Tags (comma separated)</label>
-          <input name="tags" placeholder="e.g. winter, jacket, men" />
-        </div>
-        <div class="form-group">
-          <label>Mark as Featured</label>
-          <select name="featured">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-        </div>
-      </div>
+// =======================================================
+// 篩選分類
+// =======================================================
+filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const category = btn.dataset.category;
+        const items = getItems();
+        if (category === 'All') renderItems(items);
+        else renderItems(items.filter(item => item.category === category));
+    });
+});
 
-      <button type="submit" class="btn primary full">Donate & Add</button>
-    </form>
-  </section>
+// =======================================================
+// 搜尋
+// =======================================================
+if (searchInput) {
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        const items = getItems();
+        const filtered = items.filter(item => 
+            item.itemName.toLowerCase().includes(query) || 
+            item.description.toLowerCase().includes(query) ||
+            (item.tags && item.tags.toLowerCase().includes(query))
+        );
+        renderItems(filtered);
+    });
+}
 
-  <!-- STORIES -->
-  <section id="stories" class="section">
-    <h2 class="section-title">Community Stories</h2>
-    <div class="stories-grid">
-      <div class="story-card fade-in">
-        <h4>📚 Books for students</h4>
-        <p>"We donated school books and the teacher was moved to tears — thank you!" — Lina</p>
-      </div>
-      <div class="story-card fade-in">
-        <h4>🧥 Warm coats</h4>
-        <p>"My old coats warmed three families this winter." — Ken</p>
-      </div>
-      <div class="story-card fade-in">
-        <h4>🍳 Kitchen help</h4>
-        <p>"A donated blender saved time for a community kitchen." — Mei</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="section">
-    <h2 class="section-title">About Us</h2>
-    <div class="about-content">
-      <div class="about-item fade-in">
-        <h3>Our Mission</h3>
-        <p>We reduce waste by connecting generous donors with people in need.</p>
-      </div>
-      <div class="about-item fade-in">
-        <h3>How it works</h3>
-        <p>Upload your item, add a short description and image, then wait for local requests.</p>
-      </div>
-      <div class="about-item fade-in">
-        <h3>Join Us</h3>
-        <p>Be part of a growing community that makes reuse easy and trusted.</p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- SUCCESS MODAL -->
-<div id="success-modal" class="modal">
-  <div class="modal-content">
-    <button class="modal-close" id="modalClose">&times;</button>
-    <h3>✅ Donation submitted</h3>
-    <p>Your item is now listed — thank you for donating!</p>
-    <div class="modal-actions">
-      <a class="btn primary" id="modalBack">Back to site</a>
-      <a class="btn outline" href="success.html" id="modalGoto">Go to Success Page</a>
-    </div>
-  </div>
-</div>
-
-<footer class="footer">
-  <div class="footer-inner">
-    <p>© 2025 Donation Sharing Platform — Built with care.</p>
-    <small>Data stored locally (localStorage). Replace with API to persist server-side.</small>
-  </div>
-</footer>
-
-<script src="script.js"></script>
-</body>
-</html>
+// =======================================================
+// 初始化
+// =======================================================
+document.addEventListener('DOMContentLoaded', () => {
+    renderItems(getItems());
+});
