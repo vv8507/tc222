@@ -1,7 +1,4 @@
-body {
-    background-color: red !important; /* 讓背景變成紅色 */
-    color: blue !important; /* 讓文字變成藍色 */
-}/* =======================================================
+/* =======================================================
    Base & Reset
    ======================================================= */
 :root {
@@ -302,9 +299,9 @@ main {
     display: flex; 
     gap: 30px; 
     overflow-x: scroll; 
-    padding: 20px 10px; 
-    margin-left: -10px; 
-    margin-right: -10px; 
+    padding: 20px 5%; /* 調整 padding 讓內容與兩側對齊 */
+    margin-left: -5%; 
+    margin-right: -5%; 
     scroll-snap-type: x mandatory; 
     -webkit-overflow-scrolling: touch; 
 }
