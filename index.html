@@ -5,42 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Donation Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-    --primary: #52b788; --primary-dark: #37926b; --secondary: #ffadad;
-    --bg: #f7f7f7; --card-bg: #fff; --text-dark: #333; --border: #e0e0e0;
-    --font: 'Quicksand', sans-serif;
-}
-* {box-sizing:border-box;margin:0;padding:0;}
-body {font-family:var(--font);line-height:1.6;color:var(--text-dark);background:var(--bg);}
-h1,h2,h3,h4 {color:var(--primary-dark);}
-a {text-decoration:none;color:var(--primary);}
-.section {padding:50px 5%;max-width:1000px;margin:0 auto;}
-.section-title {text-align:center;margin-bottom:30px;font-size:2em;}
-.grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
-.btn {padding:8px 15px;border-radius:5px;font-weight:600;cursor:pointer;text-align:center;}
-.btn.primary {background:var(--primary);color:#fff;border:2px solid var(--primary);}
-.btn.primary:hover {background:var(--primary-dark);border-color:var(--primary-dark);}
-.btn.outline {background:transparent;color:var(--primary);border:2px solid var(--primary);}
-.btn.outline:hover {background:var(--primary);color:#fff;}
-.form {max-width:600px;margin:0 auto;padding:20px;background:var(--card-bg);border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,0.1);}
-.form-group {margin-bottom:10px;}
-.form-group label {display:block;margin-bottom:5px;font-weight:600;}
-.form-group input, .form-group select, .form-group textarea {width:100%;padding:8px;border:1px solid var(--border);border-radius:5px;}
-.form-row {display:flex;gap:10px;}
-.item-card {background:var(--card-bg);padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
-.item-image-wrap {height:150px;overflow:hidden;text-align:center;margin-bottom:10px;}
-.item-image-wrap img {max-width:100%;max-height:150px;object-fit:contain;}
-.item-info h4 {margin-bottom:5px;font-size:1.1em;}
-.image-preview {margin-top:10px;border:2px dashed var(--border);min-height:150px;border-radius:5px;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#fff;}
-.preview-image {max-width:100%;max-height:150px;object-fit:contain;}
-.modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);justify-content:center;align-items:center;}
-.modal-content {background:#fff;padding:20px;border-radius:10px;max-width:400px;width:90%;text-align:center;position:relative;}
-.modal-close {position:absolute;top:10px;right:15px;font-size:20px;font-weight:bold;background:none;border:none;cursor:pointer;color:#aaa;}
-.modal-close:hover {color:#333;}
-.modal h3 {margin-bottom:10px;}
-.modal-actions {display:flex;justify-content:center;gap:10px;margin-top:10px;}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -73,70 +38,7 @@ a {text-decoration:none;color:var(--primary);}
 </div>
 </div>
 
-<script>
-const ITEM_STORAGE_KEY='donatedItems';
-const APPLICATION_STORAGE_KEY='borrowApplications';
-const donationForm=document.getElementById('donation-form');
-const itemImageInput=document.getElementById('itemImage');
-const imagePreviewDiv=document.getElementById('imagePreview');
-const itemListDiv=document.getElementById('item-list');
-let currentBase64Image=null;
-
-function getItems(){const data=localStorage.getItem(ITEM_STORAGE_KEY);return data?JSON.parse(data):[];}
-function saveItems(items){localStorage.setItem(ITEM_STORAGE_KEY,JSON.stringify(items));}
-function getApplications(){const data=localStorage.getItem(APPLICATION_STORAGE_KEY);return data?JSON.parse(data):[];}
-function saveApplications(apps){localStorage.setItem(APPLICATION_STORAGE_KEY,JSON.stringify(apps));}
-
-function renderItems(items){
-itemListDiv.innerHTML='';
-if(items.length===0){itemListDiv.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#888;">No donated items yet.</p>';return;}
-items.forEach(item=>{
-const card=document.createElement('div');card.classList.add('item-card');
-card.innerHTML=`<div class="item-image-wrap"><img src="${item.image}" alt="${item.itemName}" class="item-image"/></div>
-<div class="item-info"><h4>${item.itemName} (${item.condition})</h4><p>Category: <strong>${item.category}</strong></p>
-<p class="item-description">${item.description.substring(0,50)}...</p>
-<button class="btn outline borrow-btn" data-item="${item.itemName}">Apply to Borrow</button></div>`;
-itemListDiv.appendChild(card);
-});}
-
-if(itemImageInput&&imagePreviewDiv){
-itemImageInput.addEventListener('change',function(e){
-const file=e.target.files[0];currentBase64Image=null;
-if(file){imagePreviewDiv.innerHTML='';
-if(!file.type.startsWith('image/')){imagePreviewDiv.innerHTML='<p style="color:red;">Please upload a valid image file.</p>';return;}
-const reader=new FileReader();
-reader.onload=function(e){currentBase64Image=e.target.result;
-const img=document.createElement('img');img.src=currentBase64Image;img.classList.add('preview-image');imagePreviewDiv.appendChild(img);}
-reader.readAsDataURL(file);}else{imagePreviewDiv.innerHTML='';}});}
-
-if(donationForm){
-donationForm.addEventListener('submit',function(e){
-e.preventDefault();
-if(!currentBase64Image){alert("Please wait for image to load.");return;}
-const formData=new FormData(donationForm);
-const newItem={itemName:formData.get('itemName'),category:formData.get('category'),condition:formData.get('condition'),description:formData.get('description'),image:currentBase64Image};
-const items=getItems();items.push(newItem);saveItems(items);donationForm.reset();imagePreviewDiv.innerHTML='';currentBase64Image=null;renderItems(getItems());alert("Item added!");});}
-
-document.addEventListener('click',function(e){
-if(e.target.classList.contains('borrow-btn')){
-const itemName=e.target.dataset.item;
-const modal=document.getElementById('applicationsModal');modal.style.display='flex';
-const name=prompt(`Enter your name to apply for "${itemName}":`);
-if(!name)return;
-const apps=getApplications();apps.push({itemName,applicant:name,date:new Date().toLocaleString()});saveApplications(apps);
-renderApplications();
-alert(`Application submitted for "${itemName}"!`);}});
-
-function renderApplications(){
-const list=document.getElementById('application-list');
-list.innerHTML='';const apps=getApplications();if(apps.length===0){list.innerHTML='<p>No applications yet.</p>';return;}
-apps.slice().reverse().forEach(a=>{const div=document.createElement('div');div.style.borderBottom='1px solid #ccc';div.style.padding='5px 0';div.innerHTML=`<strong>${a.itemName}</strong> by ${a.applicant} <small>${a.date}</small>`;list.appendChild(div);});}
-
-document.getElementById('viewApplicationsBtn').addEventListener('click',function(){
-document.getElementById('applicationsModal').style.display='flex';renderApplications();});
-document.getElementById('closeModal').addEventListener('click',function(){document.getElementById('applicationsModal').style.display='none';});
-
-renderItems(getItems());
-</script>
+<script src="script.js"></script>
 </body>
 </html>
+
