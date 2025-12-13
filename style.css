@@ -1,545 +1,594 @@
 /* =======================================================
-   Base & Reset
-   ======================================================= */
+   Base & Reset
+   ======================================================= */
 :root {
-    --color-primary: #4CAF50; /* 綠色 */
-    --color-primary-dark: #388E3C;
-    --color-secondary: #FF9800; /* 橘色 */
-    --color-background: #F5F5F5;
-    --color-text-dark: #333;
-    --color-text-light: #fff;
-    --color-card-bg: #fff;
-    --color-border: #E0E0E0;
-    --font-family: 'Quicksand', sans-serif;
+    --color-primary: #4CAF50; /* 綠色 */
+    --color-primary-dark: #388E3C;
+    --color-secondary: #FF9800; /* 橘色 */
+    --color-background: #F5F5F5;
+    --color-text-dark: #333;
+    --color-text-light: #fff;
+    --color-card-bg: #fff;
+    --color-border: #E0E0E0;
+    --color-featured-bg: #fff8e1; /* 淺黃色 for featured section */
+    --font-family: 'Quicksand', sans-serif;
 }
 
 *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    font-family: var(--font-family);
-    line-height: 1.6;
-    color: var(--color-text-dark);
-    background-color: var(--color-background);
+    font-family: var(--font-family);
+    line-height: 1.6;
+    color: var(--color-text-dark);
+    background-color: var(--color-background);
 }
 
 a {
-    text-decoration: none;
-    color: var(--color-primary);
+    text-decoration: none;
+    color: var(--color-primary);
 }
 
 main {
-    padding-top: 50px;
+    padding-top: 50px;
 }
 
 /* =======================================================
-   Layout Helpers
-   ======================================================= */
+   Layout Helpers
+   ======================================================= */
 .section {
-    padding: 60px 5%;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 60px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .section-title {
-    font-size: 2.5em;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 40px;
-    color: var(--color-primary-dark);
+    font-size: 2.5em;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--color-primary-dark);
+}
+
+.secondary-title {
+    color: var(--color-secondary);
 }
 
 .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.center-text {
+    text-align: center;
+    margin-top: 30px;
 }
 
 /* =======================================================
-   Buttons & Forms
-   ======================================================= */
+   Buttons & Forms
+   ======================================================= */
 .btn {
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-    text-align: center;
-    display: inline-block;
-    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .btn.primary {
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
-    border: 2px solid var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    border: 2px solid var(--color-primary);
 }
 
 .btn.primary:hover {
-    background-color: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 
 .btn.outline {
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 2px solid var(--color-primary);
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
 }
 
 .btn.outline:hover {
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
 }
 
 .btn.full {
-    width: 100%;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 20px;
 }
 
 /* Form Styles */
 .form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 30px;
-    background: var(--color-card-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background: var(--color-card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
 }
 
 .form-group input[type="text"],
 .form-group select,
 .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--color-border);
-    border-radius: 5px;
-    font-family: inherit;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    font-family: inherit;
 }
 
 .form-row {
-    display: flex;
-    gap: 20px;
+    display: flex;
+    gap: 20px;
 }
 
 .form-row .form-group {
-    flex: 1;
+    flex: 1;
 }
 
+.form-row.small {
+    /* 讓小表單行在大螢幕上更緊湊 */
+    max-width: 400px; 
+    margin: 0 auto 15px auto; 
+}
+
+
 /* =======================================================
-   Header & Navigation
-   ======================================================= */
+   Header & Navigation
+   ======================================================= */
 .hero {
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
-    padding: 150px 5% 100px;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    padding: 150px 5% 100px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 10;
+    position: relative;
+    z-index: 10;
 }
 
 .hero h1 {
-    font-size: 3.5em;
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-size: 3.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .subtitle {
-    font-size: 1.2em;
-    margin-bottom: 30px;
-    font-weight: 400;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    font-weight: 400;
 }
 
 .hero-actions a {
-    margin: 0 10px;
+    margin: 0 10px;
 }
 
-/* Decorative elements */
+/* Decorative elements (Parallax base) */
 .hero-decor {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    z-index: 1;
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    z-index: 1;
+    transition: transform 0.1s ease-out; /* 為了平滑滾動視差 */
 }
 
 .decor-1 {
-    width: 300px;
-    height: 300px;
-    top: -50px;
-    right: -100px;
+    width: 300px;
+    height: 300px;
+    top: -50px;
+    right: -100px;
 }
 
 .decor-2 {
-    width: 150px;
-    height: 150px;
-    bottom: 20px;
-    left: 20px;
+    width: 150px;
+    height: 150px;
+    bottom: 20px;
+    left: 20px;
 }
 
 /* NAV Bar */
 .navbar {
-    background-color: var(--color-card-bg);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px 5%;
-    text-align: center;
+    background-color: var(--color-card-bg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px 5%;
+    text-align: center;
 }
 
 .navbar ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
 }
 
 .navbar a {
-    color: var(--color-text-dark);
-    font-weight: 600;
-    transition: color 0.3s;
+    color: var(--color-text-dark);
+    font-weight: 600;
+    transition: color 0.3s;
 }
 
 .navbar a:hover {
-    color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 /* Sticky Nav */
 .navbar.sticky {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    animation: slideDown 0.3s ease-out;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-    }
-    to {
-        transform: translateY(0);
-    }
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
 /* =======================================================
-   Features Section
-   ======================================================= */
+   Features Section
+   ======================================================= */
 .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
 }
 
 .feature-card {
-    background: var(--color-card-bg);
-    padding: 30px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--color-card-bg);
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .feature-emoji {
-    font-size: 2em;
-    margin-bottom: 10px;
+    font-size: 2em;
+    margin-bottom: 10px;
 }
 
 .feature-card h3 {
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 /* =======================================================
-   Items Section (Controls, Filters, Search)
-   ======================================================= */
+   Featured Section
+   ======================================================= */
+.featured-section {
+    background-color: var(--color-featured-bg); 
+}
+
+/* =======================================================
+   Items Section (Controls, Filters, Search)
+   ======================================================= */
 .controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .filters button {
-    background: none;
-    border: 1px solid var(--color-border);
-    padding: 8px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-right: 8px;
-    transition: background-color 0.3s;
+    background: none;
+    border: 1px solid var(--color-border);
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background-color 0.3s;
 }
 
 .filters button.active,
 .filters button:hover {
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
-    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    border-color: var(--color-primary);
 }
 
 .search-wrap input {
-    padding: 10px 15px;
-    border: 1px solid var(--color-border);
-    border-radius: 5px;
-    width: 250px;
+    padding: 10px 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    width: 250px;
 }
 
-/* Item Grid Frame */
-.item-list-frame {
-    min-height: 300px;
-    border: 2px solid var(--color-primary);
-    border-radius: 10px;
-    padding: 20px;
-    background: #fff;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
 
 /* Item Cards */
 .item-card {
-    background: var(--color-card-bg);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--color-card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .item-image-wrap {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative; /* 為了標籤定位 */
 }
 
 .item-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .item-info {
-    padding: 15px;
+    padding: 15px;
 }
 
 .item-info h4 {
-    margin-bottom: 5px;
-    color: var(--color-primary-dark);
+    margin-bottom: 5px;
+    color: var(--color-primary-dark);
 }
 
 .item-description {
-    color: #555;
+    color: #555;
+}
+
+/* Item Badges (新增樣式) */
+.item-badge {
+    position: absolute;
+    top: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    font-weight: 700;
+    z-index: 10;
+    color: var(--color-text-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.featured-badge {
+    background-color: var(--color-secondary); /* 橘色 for Featured */
+    left: 10px;
+}
+
+.condition-badge {
+    background-color: var(--color-primary-dark); /* 綠色 for Condition */
+    right: 10px;
 }
 
 /* =======================================================
-   Donate Section & Image Preview
-   ======================================================= */
+   Donate Section & Image Preview
+   ======================================================= */
 .donate-section {
-    background-color: #e8f5e9; 
+    background-color: #e8f5e9; 
 }
 
 .image-preview {
-    margin-top: 10px;
-    border: 2px dashed var(--color-border);
-    background-color: #fff;
-    min-height: 150px; 
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; 
+    margin-top: 10px;
+    border: 2px dashed var(--color-border);
+    background-color: #fff;
+    min-height: 150px; 
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    transition: border 0.3s ease; /* 為了圖片載入時的邊框動畫 */
 }
 
 .preview-image {
-    max-width: 100%; 
-    max-height: 150px; 
-    object-fit: contain; 
-    display: block;
+    max-width: 100%; 
+    max-height: 150px; 
+    object-fit: contain; 
+    display: block;
 }
 
 .error-text {
-    color: var(--color-secondary);
-    font-weight: 600;
+    color: var(--color-secondary);
+    font-weight: 600;
 }
 
 /* =======================================================
-   Stories & About Section
-   ======================================================= */
+   Stories & About Section
+   ======================================================= */
 .stories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .story-card {
-    background: var(--color-card-bg);
-    padding: 20px;
-    border-left: 5px solid var(--color-secondary);
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background: var(--color-card-bg);
+    padding: 20px;
+    border-left: 5px solid var(--color-secondary);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .story-card h4 {
-    color: var(--color-primary-dark);
-    margin-bottom: 10px;
+    color: var(--color-primary-dark);
+    margin-bottom: 10px;
 }
 
 .about-content {
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
 .about-item {
-    flex: 1;
-    min-width: 250px;
+    flex: 1;
+    min-width: 250px;
 }
 
 .about-item h3 {
-    color: var(--color-primary);
-    margin-bottom: 10px;
+    color: var(--color-primary);
+    margin-bottom: 10px;
 }
 
 /* =======================================================
-   Footer
-   ======================================================= */
+   Footer
+   ======================================================= */
 .footer {
-    background-color: var(--color-text-dark);
-    color: #bbb;
-    padding: 20px 5%;
-    text-align: center;
+    background-color: var(--color-text-dark);
+    color: #bbb;
+    padding: 20px 5%;
+    text-align: center;
 }
 
 .footer small {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.8em;
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
 }
 
 /* =======================================================
-   Success Modal
-   ======================================================= */
+   Success Modal
+   ======================================================= */
 .modal {
-    display: none; 
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    justify-content: center; 
-    align-items: center;
+    display: none; 
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center; 
+    align-items: center;
 }
 
 .modal-content {
-    background-color: var(--color-card-bg);
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background-color: var(--color-card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .modal-content h3 {
-    color: var(--color-primary-dark);
-    margin-bottom: 15px;
-    font-size: 1.8em;
+    color: var(--color-primary-dark);
+    margin-bottom: 15px;
+    font-size: 1.8em;
 }
 
 .modal-content p {
-    margin-bottom: 25px;
+    margin-bottom: 25px;
 }
 
 .modal-close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    background: none;
-    border: none;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 15px;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
 }
 
 .modal-close:hover,
 .modal-close:focus {
-    color: var(--color-text-dark);
+    color: var(--color-text-dark);
 }
 
 .modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 /* =======================================================
-   Animation & Responsiveness
-   ======================================================= */
+   Animation & Responsiveness
+   ======================================================= */
+/* 滾動淡入動畫 (由 JS 控制) */
 .invisible {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .visible {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.5em;
+    .hero h1 {
+        font-size: 2.5em;
+    }
+    .navbar ul {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .filters {
+        order: 2; 
+    }
+    .search-wrap {
+        order: 1;
+        width: 100%;
+    }
+    .search-wrap input {
+        width: 100%;
+    }
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-row.small {
+        max-width: none; /* 移除大螢幕上的寬度限制 */
     }
-    .navbar ul {
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .controls {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .filters {
-        order: 2; 
-    }
-    .search-wrap {
-        order: 1;
-        width: 100%;
-    }
-    .search-wrap input {
-        width: 100%;
-    }
-    .form-row {
-        flex-direction: column;
+
+    .hero-decor {
+        /* 在小螢幕上減少裝飾的尺寸或移除，避免佔用太多效能 */
+        display: none; 
     }
 }
