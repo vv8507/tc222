@@ -148,7 +148,6 @@ main {
 }
 
 .form-row.small {
-    /* 讓小表單行在大螢幕上更緊湊 */
     max-width: 400px; 
     margin: 0 auto 15px auto; 
 }
@@ -193,7 +192,7 @@ main {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.15);
     z-index: 1;
-    transition: transform 0.1s ease-out; /* 為了平滑滾動視差 */
+    transition: transform 0.1s ease-out; 
 }
 
 .decor-1 {
@@ -294,6 +293,30 @@ main {
 }
 
 /* =======================================================
+   Horizontal Scroll Container (水平滾動核心)
+   ======================================================= */
+.scroll-container {
+    display: flex; 
+    gap: 30px; 
+    overflow-x: scroll; 
+    padding: 20px 10px; 
+    margin-left: -10px; 
+    margin-right: -10px; 
+    scroll-snap-type: x mandatory; 
+    -webkit-overflow-scrolling: touch; 
+}
+
+/* 隱藏滾動條 */
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-container {
+    scrollbar-width: none;
+}
+
+
+/* =======================================================
    Items Section (Controls, Filters, Search)
    ======================================================= */
 .controls {
@@ -344,11 +367,22 @@ main {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
+/* 針對水平滾動的 Featured 卡片調整寬度 */
+#featured-list .item-card {
+    flex: 0 0 320px; 
+    scroll-snap-align: start; 
+}
+
 .item-image-wrap {
     width: 100%;
     height: 200px;
     overflow: hidden;
-    position: relative; /* 為了標籤定位 */
+    position: relative; 
+}
+
+/* Featured 區塊的圖片可以更大一些 */
+#featured-list .item-image-wrap {
+    height: 250px;
 }
 
 .item-image-wrap img {
@@ -370,7 +404,7 @@ main {
     color: #555;
 }
 
-/* Item Badges (新增樣式) */
+/* Item Badges (標籤) */
 .item-badge {
     position: absolute;
     top: 10px;
@@ -384,12 +418,12 @@ main {
 }
 
 .featured-badge {
-    background-color: var(--color-secondary); /* 橘色 for Featured */
+    background-color: var(--color-secondary); 
     left: 10px;
 }
 
 .condition-badge {
-    background-color: var(--color-primary-dark); /* 綠色 for Condition */
+    background-color: var(--color-primary-dark); 
     right: 10px;
 }
 
@@ -410,7 +444,7 @@ main {
     justify-content: center;
     align-items: center;
     overflow: hidden; 
-    transition: border 0.3s ease; /* 為了圖片載入時的邊框動畫 */
+    transition: border 0.3s ease; 
 }
 
 .preview-image {
@@ -584,11 +618,10 @@ main {
     }
 
     .form-row.small {
-        max-width: none; /* 移除大螢幕上的寬度限制 */
+        max-width: none; 
     }
 
     .hero-decor {
-        /* 在小螢幕上減少裝飾的尺寸或移除，避免佔用太多效能 */
         display: none; 
     }
 }
