@@ -1,16 +1,13 @@
-/* =======================================================
-   Base & Reset
-   ======================================================= */
 :root {
-    --color-primary: #4CAF50; /* 綠色 */
+    --color-primary: #4CAF50; 
     --color-primary-dark: #388E3C;
-    --color-secondary: #FF9800; /* 橘色 */
+    --color-secondary: #FF9800; 
     --color-background: #F5F5F5;
     --color-text-dark: #333;
     --color-text-light: #fff;
     --color-card-bg: #fff;
     --color-border: #E0E0E0;
-    --color-featured-bg: #fff8e1; /* 淺黃色 for featured section */
+    --color-featured-bg: #fff8e1; 
     --font-family: 'Quicksand', sans-serif;
 }
 
@@ -36,9 +33,6 @@ main {
     padding-top: 50px;
 }
 
-/* =======================================================
-   Layout Helpers
-   ======================================================= */
 .section {
     padding: 60px 5%;
     max-width: 1200px;
@@ -68,9 +62,6 @@ main {
     margin-top: 30px;
 }
 
-/* =======================================================
-   Buttons & Forms
-   ======================================================= */
 .btn {
     padding: 10px 20px;
     border-radius: 5px;
@@ -108,7 +99,6 @@ main {
     margin-top: 20px;
 }
 
-/* Form Styles */
 .form {
     max-width: 600px;
     margin: 0 auto;
@@ -153,9 +143,6 @@ main {
 }
 
 
-/* =======================================================
-   Header & Navigation
-   ======================================================= */
 .hero {
     background-color: var(--color-primary);
     color: var(--color-text-light);
@@ -186,7 +173,6 @@ main {
     margin: 0 10px;
 }
 
-/* Decorative elements (Parallax base) */
 .hero-decor {
     position: absolute;
     border-radius: 50%;
@@ -209,7 +195,6 @@ main {
     left: 20px;
 }
 
-/* NAV Bar */
 .navbar {
     background-color: var(--color-card-bg);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -234,7 +219,6 @@ main {
     color: var(--color-primary);
 }
 
-/* Sticky Nav */
 .navbar.sticky {
     position: fixed;
     top: 0;
@@ -252,9 +236,6 @@ main {
     }
 }
 
-/* =======================================================
-   Features Section
-   ======================================================= */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -285,28 +266,21 @@ main {
     margin-bottom: 10px;
 }
 
-/* =======================================================
-   Featured Section
-   ======================================================= */
 .featured-section {
     background-color: var(--color-featured-bg); 
 }
 
-/* =======================================================
-   Horizontal Scroll Container (水平滾動核心)
-   ======================================================= */
 .scroll-container {
     display: flex; 
     gap: 30px; 
     overflow-x: scroll; 
-    padding: 20px 5%; /* 調整 padding 讓內容與兩側對齊 */
+    padding: 20px 5%; 
     margin-left: -5%; 
     margin-right: -5%; 
     scroll-snap-type: x mandatory; 
     -webkit-overflow-scrolling: touch; 
 }
 
-/* 隱藏滾動條 */
 .scroll-container::-webkit-scrollbar {
     display: none;
 }
@@ -316,9 +290,6 @@ main {
 }
 
 
-/* =======================================================
-   Items Section (Controls, Filters, Search)
-   ======================================================= */
 .controls {
     display: flex;
     justify-content: space-between;
@@ -353,7 +324,6 @@ main {
 }
 
 
-/* Item Cards */
 .item-card {
     background: var(--color-card-bg);
     border-radius: 8px;
@@ -367,7 +337,6 @@ main {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* 針對水平滾動的 Featured 卡片調整寬度 */
 #featured-list .item-card {
     flex: 0 0 320px; 
     scroll-snap-align: start; 
@@ -380,7 +349,6 @@ main {
     position: relative; 
 }
 
-/* Featured 區塊的圖片可以更大一些 */
 #featured-list .item-image-wrap {
     height: 250px;
 }
@@ -404,7 +372,6 @@ main {
     color: #555;
 }
 
-/* Item Badges (標籤) */
 .item-badge {
     position: absolute;
     top: 10px;
@@ -427,9 +394,6 @@ main {
     right: 10px;
 }
 
-/* =======================================================
-   Donate Section & Image Preview
-   ======================================================= */
 .donate-section {
     background-color: #e8f5e9; 
 }
@@ -459,9 +423,6 @@ main {
     font-weight: 600;
 }
 
-/* =======================================================
-   Stories & About Section
-   ======================================================= */
 .stories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -498,9 +459,6 @@ main {
     margin-bottom: 10px;
 }
 
-/* =======================================================
-   Footer
-   ======================================================= */
 .footer {
     background-color: var(--color-text-dark);
     color: #bbb;
@@ -514,9 +472,6 @@ main {
     font-size: 0.8em;
 }
 
-/* =======================================================
-   Success Modal
-   ======================================================= */
 .modal {
     display: none; 
     position: fixed;
@@ -576,10 +531,6 @@ main {
     gap: 15px;
 }
 
-/* =======================================================
-   Animation & Responsiveness
-   ======================================================= */
-/* 滾動淡入動畫 (由 JS 控制) */
 .invisible {
     opacity: 0;
     transform: translateY(20px);
