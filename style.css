@@ -10,8 +10,8 @@
     --color-text-light: #fff;
     --color-card-bg: #fff;
     --color-border: #E0E0E0;
+    --color-featured-bg: #fff8e1; /* 淺黃色 for featured section */
     --font-family: 'Quicksand', sans-serif;
-    --color-claimed: #E0E0E0; /* 新增: 已索取項目的背景色 */
 }
 
 *, *::before, *::after {
@@ -53,10 +53,19 @@ main {
     color: var(--color-primary-dark);
 }
 
+.secondary-title {
+    color: var(--color-secondary);
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
+}
+
+.center-text {
+    text-align: center;
+    margin-top: 30px;
 }
 
 /* =======================================================
@@ -138,6 +147,12 @@ main {
     flex: 1;
 }
 
+.form-row.small {
+    max-width: 400px; 
+    margin: 0 auto 15px auto; 
+}
+
+
 /* =======================================================
    Header & Navigation
    ======================================================= */
@@ -171,12 +186,13 @@ main {
     margin: 0 10px;
 }
 
-/* Decorative elements */
+/* Decorative elements (Parallax base) */
 .hero-decor {
     position: absolute;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.15);
     z-index: 1;
+    transition: transform 0.1s ease-out; 
 }
 
 .decor-1 {
@@ -199,7 +215,6 @@ main {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 15px 5%;
     text-align: center;
-    transition: all 0.3s; /* 確保顏色切換順暢 */
 }
 
 .navbar ul {
@@ -219,16 +234,13 @@ main {
     color: var(--color-primary);
 }
 
-/* Sticky Nav (固定導覽列樣式) */
+/* Sticky Nav */
 .navbar.sticky {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
     animation: slideDown 0.3s ease-out;
-    background-color: rgba(255, 255, 255, 0.95); /* 輕微透明度 */
-    backdrop-filter: blur(2px); /* 增加磨砂玻璃效果 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes slideDown {
@@ -274,6 +286,37 @@ main {
 }
 
 /* =======================================================
+   Featured Section
+   ======================================================= */
+.featured-section {
+    background-color: var(--color-featured-bg); 
+}
+
+/* =======================================================
+   Horizontal Scroll Container (水平滾動核心)
+   ======================================================= */
+.scroll-container {
+    display: flex; 
+    gap: 30px; 
+    overflow-x: scroll; 
+    padding: 20px 10px; 
+    margin-left: -10px; 
+    margin-right: -10px; 
+    scroll-snap-type: x mandatory; 
+    -webkit-overflow-scrolling: touch; 
+}
+
+/* 隱藏滾動條 */
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-container {
+    scrollbar-width: none;
+}
+
+
+/* =======================================================
    Items Section (Controls, Filters, Search)
    ======================================================= */
 .controls {
@@ -309,26 +352,14 @@ main {
     width: 250px;
 }
 
-/* Item Grid Frame (保持不變) */
-.item-list-frame {
-    min-height: 300px;
-    border: 2px solid var(--color-primary);
-    border-radius: 10px;
-    padding: 20px;
-    background: #fff;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
 
-/* Item Cards (強化) */
+/* Item Cards */
 .item-card {
     background: var(--color-card-bg);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
-    position: relative; /* 為了 featured-tag 定位 */
 }
 
 .item-card:hover {
@@ -336,10 +367,22 @@ main {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
+/* 針對水平滾動的 Featured 卡片調整寬度 */
+#featured-list .item-card {
+    flex: 0 0 320px; 
+    scroll-snap-align: start; 
+}
+
 .item-image-wrap {
     width: 100%;
     height: 200px;
     overflow: hidden;
+    position: relative; 
+}
+
+/* Featured 區塊的圖片可以更大一些 */
+#featured-list .item-image-wrap {
+    height: 250px;
 }
 
 .item-image-wrap img {
@@ -359,48 +402,29 @@ main {
 
 .item-description {
     color: #555;
-    min-height: 4.5em; /* 保持描述區塊的高度一致 */
 }
 
-/* 新增: 項目動作與按鈕樣式 */
-.item-actions {
-    margin-top: 15px;
-}
-
-.claim-btn {
-    width: 100%;
-}
-
-/* 已索取按鈕樣式 */
-.btn.claimed {
-    background-color: var(--color-claimed);
-    color: #666;
-    border: 2px solid #ccc;
-    cursor: default;
-    width: 100%;
-    pointer-events: none; /* 禁用點擊 */
-}
-
-/* 新增: Featured Tag 樣式 */
-.featured-tag {
+/* Item Badges (標籤) */
+.item-badge {
     position: absolute;
     top: 10px;
-    right: 10px;
-    background-color: var(--color-secondary);
-    color: var(--color-text-light);
     padding: 5px 10px;
     border-radius: 5px;
-    font-weight: 700;
     font-size: 0.8em;
-    z-index: 5;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    animation: pulse 1.5s infinite; /* 加入脈動動畫 */
+    font-weight: 700;
+    z-index: 10;
+    color: var(--color-text-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.featured-badge {
+    background-color: var(--color-secondary); 
+    left: 10px;
+}
+
+.condition-badge {
+    background-color: var(--color-primary-dark); 
+    right: 10px;
 }
 
 /* =======================================================
@@ -420,6 +444,7 @@ main {
     justify-content: center;
     align-items: center;
     overflow: hidden; 
+    transition: border 0.3s ease; 
 }
 
 .preview-image {
@@ -554,12 +579,11 @@ main {
 /* =======================================================
    Animation & Responsiveness
    ======================================================= */
-
-/* 增強: 滾動淡入初始狀態 */
+/* 滾動淡入動畫 (由 JS 控制) */
 .invisible {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* 更平滑的過渡 */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .visible {
@@ -592,4 +616,12 @@ main {
     .form-row {
         flex-direction: column;
     }
+
+    .form-row.small {
+        max-width: none; 
+    }
+
+    .hero-decor {
+        display: none; 
+    }
 }
