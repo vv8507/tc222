@@ -47,14 +47,17 @@ function renderItems() {
     const card = document.createElement('div');
     card.className = 'item-card';
 
-    card.innerHTML = `
-      <img src="${item.image}" alt="">
-      <div class="item-info">
-        <h4>${item.name}</h4>
-        <p>${item.desc}</p>
-        <span class="tag">${item.category}</span>
-      </div>
-    `;
+    const imgSrc = item.image || 'https://via.placeholder.com/400x300?text=No+Image';
+
+card.innerHTML = `
+  <img src="${imgSrc}" alt="">
+  <div class="item-info">
+    <h4>${item.name}</h4>
+    <p>${item.desc}</p>
+    <span class="tag">${item.category}</span>
+  </div>
+`;
+
 
     list.appendChild(card);
   });
