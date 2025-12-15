@@ -1,3 +1,5 @@
+/* 將以下全部內容替換您現有的 style.css 檔案 */
+
 /* ===== Reset ===== */ 
 * { box-sizing: border-box; margin: 0; padding: 0; } 
 body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; line-height: 1.6; } 
@@ -46,11 +48,11 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .search-wrap input { padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; min-width: 240px; } 
 
 /* =======================================================
-   ITEMS 網格修正：緊湊居中
+    ITEMS 網格修正：緊湊居中 (核心修正)
    ======================================================= */ 
 .grid { 
   display: grid; 
-  /* 縮小最小寬度，讓更多卡片可以塞入一行 */
+  /* 縮小最小寬度 (220px)，讓更多卡片可以塞入一行 */
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
   /* 縮小卡片間隔 */
   gap: 15px; 
@@ -70,6 +72,7 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
   display: flex; 
   flex-direction: column; 
 } 
+/* 確保圖片有固定尺寸，防止卡片高度不一 */
 .item-card img { 
   width: 100%; 
   height: 180px; 
