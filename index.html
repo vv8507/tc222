@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Donation Sharing Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,25 +14,135 @@
   <a href="login.html" class="btn outline small">Login</a>
 </div>
 
+<!-- HERO -->
 <header class="hero">
-  <h1>Donation Sharing Platform</h1>
-  <p>Give unused items a second life.</p>
+  <div class="hero-content">
+    <h1>Donation Sharing Platform</h1>
+    <p class="subtitle">Give unused items a second life — help your community, shrink waste.</p>
+    <div class="hero-actions">
+      <a href="#donate" class="btn primary">Start Donating</a>
+      <a href="#items" class="btn outline">Browse Items</a>
+    </div>
+  </div>
+  <div class="hero-decor decor-1"></div>
+  <div class="hero-decor decor-2"></div>
 </header>
 
-<main class="section">
-  <h2>Donate an Item</h2>
+<!-- NAV -->
+<nav class="navbar">
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#items">Items</a></li>
+    <li><a href="#donate">Donate</a></li>
+    <li><a href="#stories">Stories</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- FEATURES -->
+<section id="features" class="section">
+  <h2 class="section-title">Why choose our platform?</h2>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-emoji">🌱</div><h3>Reduce Waste</h3><p>Give items another life.</p></div>
+    <div class="feature-card"><div class="feature-emoji">🤝</div><h3>Help Community</h3><p>Support people nearby.</p></div>
+    <div class="feature-card"><div class="feature-emoji">⚡</div><h3>Fast & Easy</h3><p>Upload and share quickly.</p></div>
+    <div class="feature-card"><div class="feature-emoji">🔒</div><h3>Safe & Trusted</h3><p>Community moderation.</p></div>
+  </div>
+</section>
+
+<!-- ITEMS -->
+<section id="items" class="section">
+  <h2 class="section-title">Available Items</h2>
+
+  <div class="controls">
+    <div class="filters">
+      <button class="filter active" data-category="All">All</button>
+      <button class="filter" data-category="Books">Books</button>
+      <button class="filter" data-category="Appliances">Appliances</button>
+      <button class="filter" data-category="Apparel">Apparel</button>
+      <button class="filter" data-category="Others">Others</button>
+    </div>
+    <div class="search-wrap">
+      <input id="searchInput" placeholder="Search items / description..." />
+    </div>
+  </div>
+
+  <div id="item-list" class="grid item-container"></div>
+</section>
+
+<!-- DONATE -->
+<section id="donate" class="section donate-section">
+  <h2 class="section-title">Donate an Item</h2>
 
   <form id="donation-form" class="form">
-    <input name="itemName" placeholder="Item name" required>
-    <textarea name="description" placeholder="Description" required></textarea>
-    <input type="file" id="itemImage" required>
-    <div id="imagePreview" class="image-preview"></div>
-    <button class="btn primary full">Donate</button>
-  </form>
+    <div class="form-group">
+      <label>Item Name *</label>
+      <input name="itemName" required />
+    </div>
 
-  <h2 style="margin-top:40px">Items</h2>
-  <div id="item-list" class="grid"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category" required>
+          <option value="">Select</option>
+          <option>Books</option>
+          <option>Appliances</option>
+          <option>Apparel</option>
+          <option>Others</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Condition</label>
+        <select name="condition">
+          <option>Good</option>
+          <option>Like New</option>
+          <option>Fair</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea name="description" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Upload Image *</label>
+      <input id="itemImage" type="file" required />
+      <div id="imagePreview" class="image-preview"></div>
+    </div>
+
+    <button class="btn primary full">Donate & Add</button>
+  </form>
+</section>
+
+<!-- STORIES -->
+<section id="stories" class="section">
+  <h2 class="section-title">Community Stories</h2>
+  <div class="stories-grid">
+    <div class="story-card"><h4>📚 Books</h4><p>Students got help.</p></div>
+    <div class="story-card"><h4>🧥 Coats</h4><p>Families stayed warm.</p></div>
+    <div class="story-card"><h4>🍳 Kitchen</h4><p>Community kitchens helped.</p></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <h2 class="section-title">About Us</h2>
+  <div class="about-content">
+    <div class="about-item"><h3>Mission</h3><p>Reduce waste.</p></div>
+    <div class="about-item"><h3>How</h3><p>Donate easily.</p></div>
+    <div class="about-item"><h3>Join</h3><p>Be part of us.</p></div>
+  </div>
+</section>
+
 </main>
+
+<footer class="footer">
+  <p>© 2025 Donation Sharing Platform</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
