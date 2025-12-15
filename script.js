@@ -5,64 +5,138 @@ const form = document.getElementById('donation-form');
 const list = document.getElementById('item-list');
 const imageInput = document.getElementById('itemImage');
 const preview = document.getElementById('imagePreview');
+const searchInput = document.getElementById('searchInput');
+const filterBtns = document.querySelectorAll('.filter');
 
-let img = null;
+let imgData = null;
+let currentCategory = 'All';
 
-function getUser(){
+/* ===== 使用者 ===== */
+function getUser() {
   return JSON.parse(localStorage.getItem(CURRENT_USER));
 }
 
-function getItems(){
+/* ===== Items ===== */
+function getItems() {
   return JSON.parse(localStorage.getItem(ITEM_KEY)) || [];
 }
 
-function saveItems(i){
-  localStorage.setItem(ITEM_KEY, JSON.stringify(i));
+function saveItems(items) {
+  localStorage.setItem(ITEM_KEY, JSON.stringify(items));
 }
 
-function render(){
+/* ===== Render ===== */
+function renderItems() {
   list.innerHTML = '';
-  getItems().forEach(i=>{
-    list.innerHTML += `
-      <div class="item-card">
-        <img src="${i.image}">
-        <div style="padding:15px">
-          <h4>${i.name}</h4>
-          <p>${i.desc}</p>
-        </div>
-      </div>`;
+
+  let items = getItems();
+
+  if (currentCategory !== 'All') {
+    items = items.filter(i => i.category === currentCategory);
+  }
+
+  const keyword = searchInput?.value.toLowerCase() || '';
+  if (keyword) {
+    items = items.filter(i =>
+      i.name.toLowerCase().includes(keyword) ||
+      i.desc.toLowerCase().includes(keyword)
+    );
+  }
+
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    card.innerHTML = `
+      <img src="${item.image}" alt="">
+      <div class="item-info">
+        <h4>${item.name}</h4>
+        <p>${item.desc}</p>
+        <span class="tag">${item.category}</span>
+      </div>
+    `;
+
+    list.appendChild(card);
   });
+
+  if (items.length === 0) {
+    list.innerHTML = `<p style="grid-column:1/-1;text-align:center;">No items found.</p>`;
+  }
 }
 
-imageInput.onchange = e => {
-  const r = new FileReader();
-  r.onload = () => {
-    img = r.result;
-    preview.innerHTML = `<img src="${img}" style="max-height:140px">`;
+/* ===== Image Preview ===== */
+imageInput?.addEventListener('change', e => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    imgData = reader.result;
+    preview.innerHTML = `<img src="${imgData}">`;
   };
-  r.readAsDataURL(e.target.files[0]);
-};
+  reader.readAsDataURL(e.target.files[0]);
+});
 
-form.onsubmit = e => {
+/* ===== Donate ===== */
+form?.addEventListener('submit', e => {
   e.preventDefault();
-  if(!getUser()){
+
+  if (!getUser()) {
     alert('Please login first');
     location.href = 'login.html';
     return;
   }
 
-  const f = new FormData(form);
+  const data = new FormData(form);
   const items = getItems();
+
   items.push({
-    name: f.get('itemName'),
-    desc: f.get('description'),
-    image: img
+    name: data.get('itemName'),
+    desc: data.get('description'),
+    category: data.get('category'),
+    image: imgData
   });
 
   saveItems(items);
-  render();
   form.reset();
   preview.innerHTML = '';
-};
+  imgData = null;
 
-render();
+  location.href = '#items';
+  renderItems();
+});
+
+/* ===== Filter ===== */
+filterBtns.forEach(btn => {
+  btn.onclick = () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCategory = btn.dataset.category;
+    renderItems();
+  };
+});
+
+/* ===== Search ===== */
+searchInput?.addEventListener('input', renderItems);
+
+/* ===== Auth UI ===== */
+const authArea = document.getElementById('authArea');
+
+function updateAuthUI() {
+  const user = getUser();
+  if (!authArea) return;
+
+  if (user) {
+    authArea.innerHTML = `
+      <span style="margin-right:10px;">Hi, ${user.email}</span>
+      <button class="btn outline small" id="logoutBtn">Logout</button>
+    `;
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem(CURRENT_USER);
+      location.reload();
+    };
+  } else {
+    authArea.innerHTML = `<a href="login.html" class="btn outline small">Login</a>`;
+  }
+}
+
+/* ===== Init ===== */
+updateAuthUI();
+renderItems();
