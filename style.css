@@ -361,4 +361,10 @@ body {
 
 .switch {
   margin-top: 15px;
+}.item-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
 }
+
