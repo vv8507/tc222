@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+  <div class="login-box">
+    <h2>Register</h2>
+
+    <input
+      type="text"
+      id="regNickname"
+      placeholder="Nickname"
+    >
+
+    <input
+      type="email"
+      id="regEmail"
+      placeholder="Email"
+    >
+
+    <input
+      type="password"
+      id="regPassword"
+      placeholder="Password"
+    >
+
+    <!-- 🔥 關鍵 -->
+    <button class="btn primary full" onclick="register()">
+      Register
+    </button>
+
+    <div class="switch">
+      <a href="login.html">Back to login</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
