@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+<div class="login-box">
+  <h2 id="title">Login</h2>
+
+  <form id="loginForm">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button class="btn primary full">Login</button>
+  </form>
+
+  <p class="switch">
+    No account?
+    <a href="#" id="toRegister">Register</a>
+  </p>
+</div>
+
+<script>
+const USER_KEY = 'users';
+const CURRENT_USER = 'currentUser';
+
+const form = document.getElementById('loginForm');
+const title = document.getElementById('title');
+const switchBtn = document.getElementById('toRegister');
+
+let mode = 'login';
+
+function getUsers(){
+  return JSON.parse(localStorage.getItem(USER_KEY)) || [];
+}
+
+switchBtn.onclick = () => {
+  mode = mode === 'login' ? 'register' : 'login';
+  title.textContent = mode === 'login' ? 'Login' : 'Register';
+  form.querySelector('button').textContent = title.textContent;
+  switchBtn.textContent = mode === 'login' ? 'Register' : 'Login';
+};
+
+form.onsubmit = e => {
+  e.preventDefault();
+
+  const email = form.email.value;
+  const password = form.password.value;
+  let users = getUsers();
+
+  if(mode === 'register'){
+    if(users.find(u => u.email === email)){
+      alert('Account exists');
+      return;
+    }
+    users.push({email, password});
+    localStorage.setItem(USER_KEY, JSON.stringify(users));
+  } else {
+    const user = users.find(u => u.email === email && u.password === password);
+    if(!user){
+      alert('Wrong login');
+      return;
+    }
+  }
+
+  localStorage.setItem(CURRENT_USER, JSON.stringify({email}));
+  location.href = 'index.html';
+};
+</script>
+
+</body>
+</html>
