@@ -36,14 +36,16 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .section-title { text-align: center; font-size: 36px; margin-bottom: 40px; color: #4caf50; } 
 
 /* =======================================================
-    FEATURES 網格修正 (Why choose our platform?)：加入居中
+    FEATURES 網格修正 (Why choose our platform?)：完美 2x2 宮格
    ======================================================= */ 
 .features-grid { 
   display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+  /* 🌟 修正：固定為 2 欄 🌟 */
+  grid-template-columns: repeat(2, minmax(220px, 1fr)); 
   gap: 25px; 
-  /* 🌟 新增：居中設定 🌟 */
-  max-width: 950px; /* 稍微縮小寬度 */
+  /* 🌟 核心修正：計算寬度，讓它剛好容納 2 欄居中 🌟 
+     (220px * 2 欄) + (25px 間隔 * 1 個間隔) = 465px */
+  max-width: 480px; 
   margin: 0 auto; 
 } 
 .feature-card { 
@@ -63,7 +65,7 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .search-wrap input { padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; min-width: 240px; } 
 
 /* =======================================================
-    ITEMS 網格修正：緊湊居中
+    ITEMS 網格修正：緊湊居中 (保持上次修正)
    ======================================================= */ 
 .grid { 
   display: grid; 
@@ -118,27 +120,25 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .image-preview img { margin-top: 10px; max-height: 160px; border-radius: 10px; } 
 
 /* =======================================================
-    STORIES 網格修正 (Community Stories)：加入居中
+    STORIES 網格 (保持多欄位居中)
    ======================================================= */ 
 .stories-grid { 
   display: grid; 
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
   gap: 25px; 
-  /* 🌟 新增：居中設定 🌟 */
-  max-width: 950px; /* 統一寬度 */
+  max-width: 950px; 
   margin: 0 auto;
 } 
 .story-card { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
 
 /* =======================================================
-    ABOUT US 網格修正：加入居中
+    ABOUT US 網格修正：一整行、居中 (保持上次修正)
    ======================================================= */ 
 .about-content { 
   display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+  grid-template-columns: 1fr; 
   gap: 25px; 
-  /* 🌟 新增：居中設定 🌟 */
-  max-width: 750px; /* 針對只有三個項目時，可以更窄一點 */
+  max-width: 400px; 
   margin: 0 auto; 
 } 
 .about-item { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
