@@ -1,144 +1,179 @@
-const CURRENT_USER='currentUser';
-const ITEM_KEY='donatedItems';
+/* ===== User Auth ===== */
+function register() {
+  const email = document.getElementById("regEmail").value;
+  const password = document.getElementById("regPassword").value;
+  const nickname = document.getElementById("regNickname").value;
 
-const list=document.getElementById('item-list');
-const form=document.getElementById('donation-form');
-const donateSection=document.getElementById('donate');
-const authArea=document.getElementById('authArea');
-const searchInput=document.getElementById('searchInput');
-const filterBtns=document.querySelectorAll('.filter');
-const imageInput=document.getElementById('itemImage');
-const preview=document.getElementById('imagePreview');
-const storiesGrid=document.getElementById('storiesGrid');
+  if (!email || !password || !nickname) {
+    alert("Please fill in all fields");
+    return;
+  }
 
-let imgData=null;
-let currentCategory='All';
+  const user = { email, password, nickname };
+  localStorage.setItem("user", JSON.stringify(user));
 
-/* ===== User ===== */
-function getUser(){
-  return JSON.parse(localStorage.getItem(CURRENT_USER));
+  alert("Register successful! Please login.");
+  window.location.href = "login.html";
 }
 
-/* ===== Auth UI ===== */
-function updateAuthUI(){
-  const user=getUser();
-  if(user){
-    authArea.innerHTML=`Hi, ${user.nickname}
-      <button class="btn outline small" id="logoutBtn">Logout</button>`;
-    donateSection.style.display='block';
+function login() {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
 
-    document.getElementById('logoutBtn').onclick=()=>{
-      localStorage.removeItem(CURRENT_USER);
-      location.reload();
-    };
-  }else{
-    authArea.innerHTML=`<a href="login.html" class="btn outline small">Login</a>`;
-    donateSection.style.display='none';
+  const savedUser = JSON.parse(localStorage.getItem("user"));
+
+  if (!savedUser) {
+    alert("No user found. Please register first.");
+    return;
+  }
+
+  if (email === savedUser.email && password === savedUser.password) {
+    localStorage.setItem("currentUser", JSON.stringify(savedUser));
+    window.location.href = "index.html";
+  } else {
+    alert("Wrong email or password");
+  }
+}
+
+function logout() {
+  localStorage.removeItem("currentUser");
+  window.location.reload();
+}
+
+/* ===== Auth UI Control ===== */
+function checkLogin() {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  const donateSection = document.getElementById("donate");
+  const authArea = document.getElementById("authArea");
+  const welcomeText = document.getElementById("welcomeText");
+
+  if (user) {
+    if (donateSection) donateSection.style.display = "block";
+    if (authArea) {
+      authArea.innerHTML = `
+        <span id="welcomeText">Hi ${user.nickname}</span>
+        <button class="btn outline small" onclick="logout()">Logout</button>
+      `;
+    }
+  } else {
+    if (donateSection) donateSection.style.display = "none";
   }
 }
 
 /* ===== Items ===== */
-function getItems(){
-  return JSON.parse(localStorage.getItem(ITEM_KEY))||[];
-}
-function saveItems(items){
-  localStorage.setItem(ITEM_KEY,JSON.stringify(items));
-}
+let items = JSON.parse(localStorage.getItem("items")) || [];
 
-function renderItems(){
-  let items=getItems();
-  list.innerHTML='';
+function renderItems(list = items) {
+  const container = document.getElementById("itemsGrid");
+  if (!container) return;
 
-  if(currentCategory!=='All'){
-    items=items.filter(i=>i.category===currentCategory);
-  }
+  container.innerHTML = "";
 
-  const keyword=searchInput.value.toLowerCase();
-  if(keyword){
-    items=items.filter(i=>
-      (i.name||'').toLowerCase().includes(keyword) ||
-      (i.desc||'').toLowerCase().includes(keyword) ||
-      (i.category||'').toLowerCase().includes(keyword)
-    );
-  }
+  list.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item-card";
 
-  if(items.length===0){
-    list.innerHTML='<p style="grid-column:1/-1;text-align:center;">No items found.</p>';
-    return;
-  }
+    const imgSrc = item.image || "https://via.placeholder.com/400x300?text=No+Image";
 
-  items.forEach(i=>{
-    const div=document.createElement('div');
-    div.className='item-card';
-    div.innerHTML=`
-      <img src="${i.image||'https://via.placeholder.com/400x300'}">
+    card.innerHTML = `
+      <img src="${imgSrc}">
       <div class="item-info">
-        <h4>${i.name||'Untitled Item'}</h4>
-        <p>${i.desc||''}</p>
-        <p><strong>Donated by:</strong> ${i.nickname}</p>
-        <span class="tag">${i.category}</span>
-      </div>`;
-    list.appendChild(div);
+        <h4>${item.name}</h4>
+        <p>${item.desc}</p>
+        <p><strong>Donated by:</strong> ${item.donor}</p>
+        <span class="tag">${item.category}</span>
+      </div>
+    `;
+    container.appendChild(card);
   });
 }
 
 /* ===== Donate ===== */
-imageInput?.addEventListener('change',e=>{
-  const reader=new FileReader();
-  reader.onload=()=>{
-    imgData=reader.result;
-    preview.innerHTML=`<img src="${imgData}">`;
-  };
-  reader.readAsDataURL(e.target.files[0]);
-});
+function donateItem() {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user) {
+    alert("Please login first");
+    return;
+  }
 
-form?.addEventListener('submit',e=>{
-  e.preventDefault();
-  const user=getUser();
-  const data=new FormData(form);
-  const items=getItems();
+  const name = document.getElementById("itemName").value;
+  const desc = document.getElementById("itemDesc").value;
+  const category = document.getElementById("itemCategory").value;
+  const image = document.getElementById("itemImage").value;
+
+  if (!name || !desc) {
+    alert("Please fill required fields");
+    return;
+  }
 
   items.push({
-    name:data.get('itemName'),
-    desc:data.get('description'),
-    category:data.get('category'),
-    image:imgData,
-    email:user.email,
-    nickname:user.nickname
+    name,
+    desc,
+    category,
+    image,
+    donor: user.nickname
   });
 
-  saveItems(items);
-  form.reset();
-  preview.innerHTML='';
-  imgData=null;
+  localStorage.setItem("items", JSON.stringify(items));
   renderItems();
-});
+  alert("Item donated successfully!");
+}
 
-/* ===== Filter & Search ===== */
-filterBtns.forEach(b=>{
-  b.onclick=()=>{
-    filterBtns.forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    currentCategory=b.dataset.category;
-    renderItems();
-  };
-});
-searchInput?.addEventListener('input',renderItems);
+/* ===== Filter ===== */
+function filterItems(category) {
+  document.querySelectorAll(".filter").forEach(btn => btn.classList.remove("active"));
+  event.target.classList.add("active");
+
+  if (category === "All") {
+    renderItems(items);
+  } else {
+    renderItems(items.filter(i => i.category === category));
+  }
+}
+
+/* ===== Search ===== */
+function searchItems() {
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = items.filter(i =>
+    i.name.toLowerCase().includes(keyword) ||
+    i.desc.toLowerCase().includes(keyword)
+  );
+  renderItems(filtered);
+}
 
 /* ===== Stories ===== */
-const stories=[
-  {title:'📚 Helping Students',text:'Textbooks donated to help students learn.'},
-  {title:'🧥 Warm Winters',text:'Clothes donated to families in need.'},
-  {title:'🍳 Community Kitchens',text:'Appliances shared with volunteers.'}
+const stories = [
+  {
+    title: "📚 Helping Students Learn",
+    text: "Donated books helped students who couldn’t afford textbooks."
+  },
+  {
+    title: "🧥 Staying Warm Together",
+    text: "Warm clothes were shared with families during winter."
+  },
+  {
+    title: "🍳 Community Kitchen Support",
+    text: "Appliances donated to help volunteers cook meals."
+  }
 ];
 
-stories.forEach(s=>{
-  const div=document.createElement('div');
-  div.className='story-card';
-  div.innerHTML=`<h4>${s.title}</h4><p>${s.text}</p>`;
-  storiesGrid.appendChild(div);
-});
+function renderStories() {
+  const grid = document.getElementById("storiesGrid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+  stories.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "story-card";
+    div.innerHTML = `<h4>${s.title}</h4><p>${s.text}</p>`;
+    grid.appendChild(div);
+  });
+}
 
 /* ===== Init ===== */
-updateAuthUI();
-renderItems();
+document.addEventListener("DOMContentLoaded", () => {
+  checkLogin();
+  renderItems();
+  renderStories();
+});
