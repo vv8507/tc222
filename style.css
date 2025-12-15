@@ -40,12 +40,11 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
    ======================================================= */ 
 .features-grid { 
   display: grid; 
-  /* 🌟 修正：固定為 2 欄 🌟 */
-  grid-template-columns: repeat(2, minmax(220px, 1fr)); 
+  /* 🌟 修正：強制固定為 2 欄 🌟 */
+  grid-template-columns: repeat(2, 1fr); /* 讓兩欄平均分配空間 */
   gap: 25px; 
-  /* 🌟 核心修正：計算寬度，讓它剛好容納 2 欄居中 🌟 
-     (220px * 2 欄) + (25px 間隔 * 1 個間隔) = 465px */
-  max-width: 480px; 
+  /* 🌟 修正：使用固定的最大寬度來確保只有 2x2 結構 🌟 */
+  max-width: 500px; 
   margin: 0 auto; 
 } 
 .feature-card { 
