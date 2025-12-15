@@ -8,19 +8,18 @@
 <body class="login-page">
 
 <div class="login-box">
-  <h2 id="title">Login</h2>
+  <h2 id="title">Login</h2>
 
-  <form id="loginForm">
-    <input type="text" name="nickname" placeholder="Nickname" style="display:none">
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button class="btn primary full">Login</button>
-  </form>
+  <form id="loginForm">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button class="btn primary full">Login</button>
+  </form>
 
-  <p class="switch">
-    No account?
-    <a href="#" id="toggle">Register</a>
-  </p>
+  <p class="switch">
+    No account?
+    <a href="#" id="toggle">Register</a>
+  </p>
 </div>
 
 <script>
@@ -29,54 +28,32 @@ const CURRENT_USER='currentUser';
 const form=document.getElementById('loginForm');
 const title=document.getElementById('title');
 const toggle=document.getElementById('toggle');
-const nicknameInput = form.querySelector('input[name="nickname"]'); // 抓取 nickname 欄位
 let mode='login';
 
 function getUsers(){return JSON.parse(localStorage.getItem(USER_KEY))||[]}
 
 toggle.onclick=()=>{
-  mode=mode==='login'?'register':'login';
-  title.textContent=mode==='login'?'Login':'Register';
-  form.querySelector('button').textContent=title.textContent;
-  
-  // 控制 nickname 欄位顯示/隱藏
-  nicknameInput.style.display = mode === 'register' ? 'block' : 'none';
-  nicknameInput.required = mode === 'register';
-  
-  // 更新切換文字
-  document.querySelector('.switch').innerHTML = mode === 'login' 
-    ? 'No account? <a href="#" id="toggle">Register</a>'
-    : 'Already have an account? <a href="#" id="toggle">Login</a>';
-  document.getElementById('toggle').onclick = toggle.onclick; // 重新綁定事件
+  mode=mode==='login'?'register':'login';
+  title.textContent=mode==='login'?'Login':'Register';
+  form.querySelector('button').textContent=title.textContent;
 };
 
 form.onsubmit=e=>{
-  e.preventDefault();
-  const email=form.email.value;
-  const pw=form.password.value;
-  const nickname = form.nickname.value || 'User'; // 取得 nickname
-  let users=getUsers();
-  
-  if(mode==='register'){
-    if(users.find(u=>u.email===email)) return alert('Account exists');
-    // 儲存 nickname
-    users.push({email,pw,nickname}); 
-    localStorage.setItem(USER_KEY,JSON.stringify(users));
-    alert('註冊成功！請登入。');
-    mode = 'register'; // 觸發切換回登入模式
-    toggle.onclick();
-    form.reset();
-    return;
-  }else{
-    // 登入時檢查
-    const user = users.find(u => u.email === email && u.pw === pw);
-    if(!user) return alert('Wrong login');
-    
-    // 登入成功時，將 nickname 和 email 一起存入
-    localStorage.setItem(CURRENT_USER,JSON.stringify({email: user.email, nickname: user.nickname || 'User'})); 
-  }
+  e.preventDefault();
+  const email=form.email.value;
+  const pw=form.password.value;
+  let users=getUsers();
 
-  location.href='index.html';
+  if(mode==='register'){
+    if(users.find(u=>u.email===email)) return alert('Account exists');
+    users.push({email,pw});
+    localStorage.setItem(USER_KEY,JSON.stringify(users));
+  }else{
+    if(!users.find(u=>u.email===email&&u.pw===pw)) return alert('Wrong login');
+  }
+
+  localStorage.setItem(CURRENT_USER,JSON.stringify({email}));
+  location.href='index.html';
 };
 </script>
 </body>
