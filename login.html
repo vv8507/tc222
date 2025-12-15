@@ -2,108 +2,82 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login / Register</title>
+<title>Login</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-page">
 
 <div class="login-box">
-  <h2 id="title">Login</h2>
+  <h2 id="title">Login</h2>
 
-  <form id="loginForm">
-    <input type="text" name="nickname" placeholder="Nickname" style="display:none"> 
-    
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Password" required>
-    
-    <button type="submit" class="btn primary full">Login</button>
-  </form>
+  <form id="loginForm">
+    <input type="text" name="nickname" placeholder="Nickname" style="display:none">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button class="btn primary full">Login</button>
+  </form>
 
-  <p class="switch">
-    No account?
-    <a href="#" id="toggle">Register</a>
-  </p>
+  <p class="switch">
+    No account?
+    <a href="#" id="toggle">Register</a>
+  </p>
 </div>
 
 <script>
-const USER_KEY = 'users';
-const CURRENT_USER = 'currentUser';
-const form = document.getElementById('loginForm');
-const toggle = document.getElementById('toggle');
-const title = document.getElementById('title');
-let mode = 'login'; // 預設為登入模式
+const USER_KEY='users';
+const CURRENT_USER='currentUser';
+const form=document.getElementById('loginForm');
+const title=document.getElementById('title');
+const toggle=document.getElementById('toggle');
+const nicknameInput = form.querySelector('input[name="nickname"]'); // 抓取 nickname 欄位
+let mode='login';
 
-function getUsers(){
-  return JSON.parse(localStorage.getItem(USER_KEY)) || [];
-}
+function getUsers(){return JSON.parse(localStorage.getItem(USER_KEY))||[]}
 
-const updateToggleUI = () => {
-    // 每次更新介面都需要重新獲取元素，以防 innerHTML 覆蓋
-    const currentToggle = document.getElementById('toggle');
-    const nicknameInput = form.querySelector('input[name="nickname"]');
-
-    mode = mode === 'login' ? 'register' : 'login';
-    title.textContent = mode === 'login' ? 'Login' : 'Register';
-    form.querySelector('button').textContent = title.textContent;
-
-    // 顯示/隱藏暱稱欄位
-    nicknameInput.style.display = mode === 'register' ? 'block' : 'none';
-    nicknameInput.required = mode === 'register';
-    
-    // 更新切換連結文字和容器
-    document.querySelector('.switch').innerHTML = mode === 'login' 
-      ? 'No account? <a href="#" id="toggle">Register</a>'
-      : 'Already have an account? <a href="#" id="toggle">Login</a>';
-    
-    // 重新綁定事件：因為 innerHTML 變了，舊的事件監聽器會失效
-    document.getElementById('toggle').onclick = updateToggleUI; 
-    
-    // 清空表單
-    form.reset();
+toggle.onclick=()=>{
+  mode=mode==='login'?'register':'login';
+  title.textContent=mode==='login'?'Login':'Register';
+  form.querySelector('button').textContent=title.textContent;
+  
+  // 控制 nickname 欄位顯示/隱藏
+  nicknameInput.style.display = mode === 'register' ? 'block' : 'none';
+  nicknameInput.required = mode === 'register';
+  
+  // 更新切換文字
+  document.querySelector('.switch').innerHTML = mode === 'login' 
+    ? 'No account? <a href="#" id="toggle">Register</a>'
+    : 'Already have an account? <a href="#" id="toggle">Login</a>';
+  document.getElementById('toggle').onclick = toggle.onclick; // 重新綁定事件
 };
 
-toggle.onclick = updateToggleUI;
-
-form.onsubmit = e => {
-  e.preventDefault();
-  const email = form.email.value;
-  const pw = form.password.value;
-  const nickname = form.nickname.value || 'User'; // 為暱稱提供預設值
-  let users = getUsers();
-
-  if (mode === 'register') {
-    // 註冊邏輯
-    if (users.find(u => u.email === email)) {
-      alert('此帳號已被註冊');
-      return;
-    }
-    
-    // 儲存新用戶
-    users.push({email, pw, nickname});
-    localStorage.setItem(USER_KEY, JSON.stringify(users));
-    
-    alert('註冊成功！請使用新帳號登入。');
-    
-    // 註冊成功後，切換回登入模式
-    document.getElementById('toggle').click(); 
-
-  } else {
-    // 登入邏輯
+form.onsubmit=e=>{
+  e.preventDefault();
+  const email=form.email.value;
+  const pw=form.password.value;
+  const nickname = form.nickname.value || 'User'; // 取得 nickname
+  let users=getUsers();
+  
+  if(mode==='register'){
+    if(users.find(u=>u.email===email)) return alert('Account exists');
+    // 儲存 nickname
+    users.push({email,pw,nickname}); 
+    localStorage.setItem(USER_KEY,JSON.stringify(users));
+    alert('註冊成功！請登入。');
+    mode = 'register'; // 觸發切換回登入模式
+    toggle.onclick();
+    form.reset();
+    return;
+  }else{
+    // 登入時檢查
     const user = users.find(u => u.email === email && u.pw === pw);
+    if(!user) return alert('Wrong login');
     
-    if (!user) {
-      alert('電子郵件或密碼錯誤');
-      return;
-    }
-    
-    // 登入成功：將不含密碼的公開資訊存入 CURRENT_USER
-    localStorage.setItem(CURRENT_USER, JSON.stringify({email: user.email, nickname: user.nickname}));
-    
-    // 跳轉到主頁面 (使用 './index.html' 確保在子目錄下的跳轉正確)
-    location.href = './index.html'; 
-  }
+    // 登入成功時，將 nickname 和 email 一起存入
+    localStorage.setItem(CURRENT_USER,JSON.stringify({email: user.email, nickname: user.nickname || 'User'})); 
+  }
+
+  location.href='index.html';
 };
 </script>
-
 </body>
 </html>
