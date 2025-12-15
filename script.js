@@ -1,1 +1,135 @@
-const CURRENT_USER = 'currentUser'; const ITEM_KEY = 'donatedItems'; const form = document.getElementById('donation-form'); const list = document.getElementById('item-list'); const imageInput = document.getElementById('itemImage'); const preview = document.getElementById('imagePreview'); const searchInput = document.getElementById('searchInput'); const filterBtns = document.querySelectorAll('.filter'); let imgData = null; let currentCategory = 'All'; /* ===== 使用者 ===== */ function getUser() { return JSON.parse(localStorage.getItem(CURRENT_USER)); } /* ===== Items ===== */ function getItems() { return JSON.parse(localStorage.getItem(ITEM_KEY)) || []; } function saveItems(items) { localStorage.setItem(ITEM_KEY, JSON.stringify(items)); } /* ===== Render ===== */ function renderItems() { list.innerHTML = ''; let items = getItems(); if (currentCategory !== 'All') { items = items.filter(i => i.category === currentCategory); } const keyword = searchInput?.value.toLowerCase() || ''; if (keyword) { items = items.filter(i => i.name.toLowerCase().includes(keyword) || i.desc.toLowerCase().includes(keyword) ); } items.forEach(item => { const card = document.createElement('div'); card.className = 'item-card'; const imgSrc = item.image || 'https://via.placeholder.com/400x300?text=No+Image'; card.innerHTML = ` <img src="${imgSrc}" alt=""> <div class="item-info"> <h4>${item.name}</h4> <p>${item.desc}</p> <span class="tag">${item.category}</span> </div> `; list.appendChild(card); }); if (items.length === 0) { list.innerHTML = `<p style="grid-column:1/-1;text-align:center;">No items found.</p>`; } } /* ===== Image Preview ===== */ imageInput?.addEventListener('change', e => { const reader = new FileReader(); reader.onload = () => { imgData = reader.result; preview.innerHTML = `<img src="${imgData}">`; }; reader.readAsDataURL(e.target.files[0]); }); /* ===== Donate ===== */ form?.addEventListener('submit', e => { e.preventDefault(); if (!getUser()) { alert('Please login first'); location.href = 'login.html'; return; } const data = new FormData(form); const items = getItems(); items.push({ name: data.get('itemName'), desc: data.get('description'), category: data.get('category'), image: imgData }); saveItems(items); form.reset(); preview.innerHTML = ''; imgData = null; location.href = '#items'; renderItems(); }); /* ===== Filter ===== */ filterBtns.forEach(btn => { btn.onclick = () => { filterBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentCategory = btn.dataset.category; renderItems(); }; }); /* ===== Search ===== */ searchInput?.addEventListener('input', renderItems); /* ===== Auth UI ===== */ const authArea = document.getElementById('authArea'); function updateAuthUI() { const user = getUser(); if (!authArea) return; if (user) { authArea.innerHTML = ` <span style="margin-right:10px;">Hi, ${user.email}</span> <button class="btn outline small" id="logoutBtn">Logout</button> `; document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem(CURRENT_USER); location.reload(); }; } else { authArea.innerHTML = `<a href="login.html" class="btn outline small">Login</a>`; } } /* ===== Init ===== */ updateAuthUI(); renderItems();
+const CURRENT_USER='currentUser';
+const ITEM_KEY='donatedItems';
+
+const list=document.getElementById('item-list');
+const form=document.getElementById('donation-form');
+const donateSection=document.getElementById('donate');
+const authArea=document.getElementById('authArea');
+const searchInput=document.getElementById('searchInput');
+const filterBtns=document.querySelectorAll('.filter');
+const imageInput=document.getElementById('itemImage');
+const preview=document.getElementById('imagePreview');
+const storiesGrid=document.getElementById('storiesGrid');
+
+let imgData=null;
+let currentCategory='All';
+
+/* ===== User ===== */
+function getUser(){
+  return JSON.parse(localStorage.getItem(CURRENT_USER));
+}
+
+/* ===== Auth UI ===== */
+function updateAuthUI(){
+  const user=getUser();
+
+  if(user){
+    authArea.innerHTML=`Hi, ${user.email}
+      <button class="btn outline small" id="logoutBtn">Logout</button>`;
+    donateSection.style.display='block';
+
+    document.getElementById('logoutBtn').onclick=()=>{
+      localStorage.removeItem(CURRENT_USER);
+      location.reload();
+    };
+  }else{
+    authArea.innerHTML=`<a href="login.html" class="btn outline small">Login</a>`;
+    donateSection.style.display='none';
+  }
+}
+
+/* ===== Items ===== */
+function getItems(){
+  return JSON.parse(localStorage.getItem(ITEM_KEY))||[];
+}
+function saveItems(items){
+  localStorage.setItem(ITEM_KEY,JSON.stringify(items));
+}
+
+function renderItems(){
+  let items=getItems();
+  list.innerHTML='';
+
+  if(currentCategory!=='All'){
+    items=items.filter(i=>i.category===currentCategory);
+  }
+
+  const keyword=searchInput.value.toLowerCase();
+  if(keyword){
+    items=items.filter(i=>i.name.toLowerCase().includes(keyword));
+  }
+
+  items.forEach(i=>{
+    const div=document.createElement('div');
+    div.className='item-card';
+    div.innerHTML=`
+      <img src="${i.image}">
+      <div class="item-info">
+        <h4>${i.name}</h4>
+        <p>${i.desc}</p>
+        <p><strong>Donated by:</strong> ${i.email}</p>
+        <span class="tag">${i.category}</span>
+      </div>`;
+    list.appendChild(div);
+  });
+
+  if(items.length===0){
+    list.innerHTML='<p>No items found.</p>';
+  }
+}
+
+/* ===== Donate ===== */
+imageInput?.addEventListener('change',e=>{
+  const reader=new FileReader();
+  reader.onload=()=>{imgData=reader.result;preview.innerHTML=`<img src="${imgData}">`};
+  reader.readAsDataURL(e.target.files[0]);
+});
+
+form?.addEventListener('submit',e=>{
+  e.preventDefault();
+  const user=getUser();
+  const data=new FormData(form);
+  const items=getItems();
+
+  items.push({
+    name:data.get('itemName'),
+    desc:data.get('description'),
+    category:data.get('category'),
+    image:imgData,
+    email:user.email
+  });
+
+  saveItems(items);
+  form.reset();
+  preview.innerHTML='';
+  renderItems();
+});
+
+/* ===== Filter & Search ===== */
+filterBtns.forEach(b=>{
+  b.onclick=()=>{
+    filterBtns.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentCategory=b.dataset.category;
+    renderItems();
+  };
+});
+searchInput?.addEventListener('input',renderItems);
+
+/* ===== Stories (Dynamic) ===== */
+const stories=[
+  {title:'📚 Helping Students',text:'Donated textbooks helped students learn.'},
+  {title:'🧥 Warm Winters',text:'Winter clothes supported families.'},
+  {title:'🍳 Community Kitchens',text:'Appliances helped prepare meals.'}
+];
+
+stories.forEach(s=>{
+  const div=document.createElement('div');
+  div.className='story-card';
+  div.innerHTML=`<h4>${s.title}</h4><p>${s.text}</p>`;
+  storiesGrid.appendChild(div);
+});
+
+/* ===== Init ===== */
+updateAuthUI();
+renderItems();
