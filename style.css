@@ -20,4 +20,51 @@
   max-width: 360px;
   width: 100%;
   text-align: center;
+}/* ===== Items Cards Fix ===== */
+.item-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
+
+.item-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.item-info {
+  padding: 16px;
+}
+
+.item-info h4 {
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.item-info p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.tag {
+  display: inline-block;
+  background: #e6f4ea;
+  color: #2e7d32;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ===== Auth Area ===== */
+.auth-area-fixed {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  z-index: 9999;
+}
+
