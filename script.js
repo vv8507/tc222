@@ -1,3 +1,5 @@
+/* 將以下全部內容替換您現有的 script.js 檔案 */
+
 const CURRENT_USER='currentUser';
 const ITEM_KEY='donatedItems';
 
@@ -51,6 +53,9 @@ function saveItems(items){
 function renderItems(){
   let items=getItems();
   list.innerHTML='';
+  
+  // 檢查 list 元素是否存在
+  if (!list) return;
 
   if(currentCategory!=='All'){
     items=items.filter(i=>i.category===currentCategory);
@@ -61,27 +66,32 @@ function renderItems(){
     items=items.filter(i=>i.name.toLowerCase().includes(keyword));
   }
 
+  if(items.length===0){
+    // 使用 grid-column:1/-1 確保提示文本橫跨整個網格區域並居中
+    list.innerHTML='<p style="grid-column:1/-1; text-align:center; font-size:1.2em; color:#777;">No items found in this category or search.</p>';
+    return;
+  }
+  
   items.forEach(i=>{
     const div=document.createElement('div');
     div.className='item-card';
     
-    // 優先顯示 nickname，若無則顯示 email
-    const donatedBy = i.nickname || i.email || 'undefined'; 
+    // 🌟 核心修正：提供預設值，解決 undefined 和圖片缺失問題 🌟
+    const imageSrc = i.image || 'https://via.placeholder.com/400x300'; // 圖片佔位符
+    const itemName = i.name || 'Untitled Item';
+    const itemDesc = i.desc || 'No description provided.';
+    const donatedBy = i.nickname || i.email || 'Anonymous'; 
 
     div.innerHTML=`
-      <img src="${i.image}">
+      <img src="${imageSrc}" alt="${itemName}">
       <div class="item-info">
-        <h4>${i.name}</h4>
-        <p>${i.desc}</p>
+        <h4>${itemName}</h4>
+        <p>${itemDesc}</p>
         <p><strong>Donated by:</strong> ${donatedBy}</p>
         <span class="tag">${i.category}</span>
       </div>`;
     list.appendChild(div);
   });
-
-  if(items.length===0){
-    list.innerHTML='<p>No items found.</p>';
-  }
 }
 
 /* ===== Donate ===== */
@@ -103,12 +113,14 @@ form?.addEventListener('submit',e=>{
     category:data.get('category'),
     image:imgData,
     email:user.email,
-    nickname: user.nickname // 儲存 nickname 
+    nickname: user.nickname 
   });
 
   saveItems(items);
   form.reset();
   preview.innerHTML='';
+  imgData = null;
+  alert('Item successfully donated!');
   renderItems();
 });
 
