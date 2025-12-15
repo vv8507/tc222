@@ -22,9 +22,8 @@ function getUser(){
 /* ===== Auth UI ===== */
 function updateAuthUI(){
   const user=getUser();
-
   if(user){
-    authArea.innerHTML=`Hi, ${user.email}
+    authArea.innerHTML=`Hi, ${user.nickname}
       <button class="btn outline small" id="logoutBtn">Logout</button>`;
     donateSection.style.display='block';
 
@@ -56,32 +55,40 @@ function renderItems(){
 
   const keyword=searchInput.value.toLowerCase();
   if(keyword){
-    items=items.filter(i=>i.name.toLowerCase().includes(keyword));
+    items=items.filter(i=>
+      (i.name||'').toLowerCase().includes(keyword) ||
+      (i.desc||'').toLowerCase().includes(keyword) ||
+      (i.category||'').toLowerCase().includes(keyword)
+    );
+  }
+
+  if(items.length===0){
+    list.innerHTML='<p style="grid-column:1/-1;text-align:center;">No items found.</p>';
+    return;
   }
 
   items.forEach(i=>{
     const div=document.createElement('div');
     div.className='item-card';
     div.innerHTML=`
-      <img src="${i.image}">
+      <img src="${i.image||'https://via.placeholder.com/400x300'}">
       <div class="item-info">
-        <h4>${i.name}</h4>
-        <p>${i.desc}</p>
-        <p><strong>Donated by:</strong> ${i.email}</p>
+        <h4>${i.name||'Untitled Item'}</h4>
+        <p>${i.desc||''}</p>
+        <p><strong>Donated by:</strong> ${i.nickname}</p>
         <span class="tag">${i.category}</span>
       </div>`;
     list.appendChild(div);
   });
-
-  if(items.length===0){
-    list.innerHTML='<p>No items found.</p>';
-  }
 }
 
 /* ===== Donate ===== */
 imageInput?.addEventListener('change',e=>{
   const reader=new FileReader();
-  reader.onload=()=>{imgData=reader.result;preview.innerHTML=`<img src="${imgData}">`};
+  reader.onload=()=>{
+    imgData=reader.result;
+    preview.innerHTML=`<img src="${imgData}">`;
+  };
   reader.readAsDataURL(e.target.files[0]);
 });
 
@@ -96,12 +103,14 @@ form?.addEventListener('submit',e=>{
     desc:data.get('description'),
     category:data.get('category'),
     image:imgData,
-    email:user.email
+    email:user.email,
+    nickname:user.nickname
   });
 
   saveItems(items);
   form.reset();
   preview.innerHTML='';
+  imgData=null;
   renderItems();
 });
 
@@ -116,11 +125,11 @@ filterBtns.forEach(b=>{
 });
 searchInput?.addEventListener('input',renderItems);
 
-/* ===== Stories (Dynamic) ===== */
+/* ===== Stories ===== */
 const stories=[
-  {title:'📚 Helping Students',text:'Donated textbooks helped students learn.'},
-  {title:'🧥 Warm Winters',text:'Winter clothes supported families.'},
-  {title:'🍳 Community Kitchens',text:'Appliances helped prepare meals.'}
+  {title:'📚 Helping Students',text:'Textbooks donated to help students learn.'},
+  {title:'🧥 Warm Winters',text:'Clothes donated to families in need.'},
+  {title:'🍳 Community Kitchens',text:'Appliances shared with volunteers.'}
 ];
 
 stories.forEach(s=>{
