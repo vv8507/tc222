@@ -1,200 +1,104 @@
-// =======================================================
-// 全域變數和輔助函式
-// =======================================================
+const ITEM_KEY = 'donatedItems';
+const USER_KEY = 'users';
+const CURRENT_USER = 'currentUser';
 
-const ITEM_STORAGE_KEY = 'donatedItems';
 const donationForm = document.getElementById('donation-form');
-const itemImageInput = document.getElementById('itemImage');
-const imagePreviewDiv = document.getElementById('imagePreview');
-const itemListDiv = document.getElementById('item-list');
-const successModal = document.getElementById('success-modal');
-const modalClose = document.getElementById('modalClose');
-const modalBack = document.getElementById('modalBack');
-const filters = document.querySelectorAll('.filters button');
-const searchInput = document.getElementById('searchInput');
+const itemList = document.getElementById('item-list');
+const imageInput = document.getElementById('itemImage');
+const preview = document.getElementById('imagePreview');
 
-let currentBase64Image = null;
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const authModal = document.getElementById('auth-modal');
+const authForm = document.getElementById('authForm');
+const authTitle = document.getElementById('authTitle');
+const authSubmit = document.getElementById('authSubmit');
+const authArea = document.getElementById('authArea');
+const authClose = document.getElementById('authClose');
 
-// =======================================================
-// 取得 / 儲存捐贈項目
-// =======================================================
-function getItems() {
-    const data = localStorage.getItem(ITEM_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+let mode = 'login';
+let imgBase64 = null;
+
+/* ---------- AUTH ---------- */
+function getUsers(){return JSON.parse(localStorage.getItem(USER_KEY))||[]}
+function setUser(u){localStorage.setItem(CURRENT_USER,JSON.stringify(u));updateAuthUI()}
+function getUser(){return JSON.parse(localStorage.getItem(CURRENT_USER))}
+
+loginBtn.onclick=()=>openAuth('login')
+registerBtn.onclick=()=>openAuth('register')
+authClose.onclick=()=>authModal.style.display='none'
+
+function openAuth(m){
+  mode=m;
+  authTitle.textContent=m==='login'?'Login':'Register';
+  authSubmit.textContent=authTitle.textContent;
+  authModal.style.display='flex';
 }
 
-function saveItems(items) {
-    localStorage.setItem(ITEM_STORAGE_KEY, JSON.stringify(items));
+authForm.onsubmit=e=>{
+  e.preventDefault();
+  const email=authForm.email.value;
+  const pw=authForm.password.value;
+  let users=getUsers();
+
+  if(mode==='register'){
+    if(users.find(u=>u.email===email)) return alert('Email exists');
+    users.push({email,pw});
+    localStorage.setItem(USER_KEY,JSON.stringify(users));
+    setUser({email});
+  }else{
+    const u=users.find(u=>u.email===email&&u.pw===pw);
+    if(!u) return alert('Invalid');
+    setUser({email});
+  }
+  authModal.style.display='none';
 }
 
-// =======================================================
-// 渲染項目
-// =======================================================
-function renderItems(items) {
-    if (!itemListDiv) return;
-    itemListDiv.innerHTML = '';
-
-    if (items.length === 0) {
-        itemListDiv.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#888;">No donated items available yet.</p>';
-        return;
+function updateAuthUI(){
+  const u=getUser();
+  if(u){
+    authArea.innerHTML=`Hi, ${u.email} <button class="btn outline small" id="logout">Logout</button>`;
+    document.getElementById('logout').onclick=()=>{
+      localStorage.removeItem(CURRENT_USER);
+      location.reload();
     }
+  }
+}
+updateAuthUI();
 
-    items.forEach(item => {
-        const card = document.createElement('div');
-        card.classList.add('item-card');
+/* ---------- ITEMS ---------- */
+function getItems(){return JSON.parse(localStorage.getItem(ITEM_KEY))||[]}
+function saveItems(i){localStorage.setItem(ITEM_KEY,JSON.stringify(i))}
 
-        const imageUrl = item.image ? item.image : 'placeholder.jpg';
-
-        card.innerHTML = `
-            <div class="item-image-wrap">
-                <img src="${imageUrl}" alt="${item.itemName}" class="item-image" />
-            </div>
-            <div class="item-info">
-                <h4>${item.itemName} (${item.condition})</h4>
-                <p>Category: <strong>${item.category}</strong></p>
-                <p class="item-description">${item.description.substring(0, 50)}...</p>
-            </div>
-        `;
-        itemListDiv.appendChild(card);
-    });
+function render(items){
+  itemList.innerHTML='';
+  items.forEach(i=>{
+    itemList.innerHTML+=`
+      <div class="item-card">
+        <img src="${i.image}">
+        <div style="padding:15px">
+          <h4>${i.name}</h4>
+          <p>${i.desc}</p>
+        </div>
+      </div>`;
+  })
 }
 
-// =======================================================
-// 實時圖片預覽
-// =======================================================
-if (itemImageInput && imagePreviewDiv) {
-    itemImageInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        currentBase64Image = null;
-
-        if (file) {
-            imagePreviewDiv.innerHTML = '';
-
-            if (!file.type.startsWith('image/')) {
-                imagePreviewDiv.innerHTML = '<p class="error-text">Please upload a valid image file.</p>';
-                return;
-            }
-
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                currentBase64Image = e.target.result;
-
-                const img = document.createElement('img');
-                img.src = currentBase64Image;
-                img.alt = "Item Preview";
-                img.classList.add('preview-image');
-
-                imagePreviewDiv.appendChild(img);
-            };
-
-            reader.readAsDataURL(file);
-        } else {
-            imagePreviewDiv.innerHTML = '';
-        }
-    });
+imageInput.onchange=e=>{
+  const r=new FileReader();
+  r.onload=()=>{imgBase64=r.result;preview.innerHTML=`<img src="${imgBase64}" style="max-height:140px">`}
+  r.readAsDataURL(e.target.files[0]);
 }
 
-// =======================================================
-// 表單提交
-// =======================================================
-if (donationForm) {
-    donationForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        if (!currentBase64Image) {
-            alert("Please wait for the image to load or select a file.");
-            return;
-        }
-
-        const formData = new FormData(donationForm);
-        const newItem = {
-            itemName: formData.get('itemName'),
-            category: formData.get('category'),
-            condition: formData.get('condition'),
-            description: formData.get('description'),
-            image: currentBase64Image,
-            tags: formData.get('tags') ? formData.get('tags').split(',').map(t => t.trim()) : [],
-            featured: formData.get('featured')
-        };
-
-        const items = getItems();
-        items.push(newItem);
-        saveItems(items);
-
-        renderItems(items);
-
-        // Reset form
-        donationForm.reset();
-        imagePreviewDiv.innerHTML = '';
-        currentBase64Image = null;
-
-        // Show modal
-        if (successModal) {
-            successModal.style.display = 'flex';
-        }
-    });
+donationForm.onsubmit=e=>{
+  e.preventDefault();
+  if(!getUser()) return alert('Please login first');
+  const f=new FormData(donationForm);
+  const items=getItems();
+  items.push({name:f.get('itemName'),desc:f.get('description'),image:imgBase64});
+  saveItems(items);
+  render(items);
+  donationForm.reset();preview.innerHTML='';
 }
 
-// =======================================================
-// 關閉成功彈窗
-// =======================================================
-if (modalClose) {
-    modalClose.addEventListener('click', () => {
-        successModal.style.display = 'none';
-    });
-}
-if (modalBack) {
-    modalBack.addEventListener('click', () => {
-        successModal.style.display = 'none';
-    });
-}
-
-// =======================================================
-// 篩選功能
-// =======================================================
-filters.forEach(button => {
-    button.addEventListener('click', function() {
-        filters.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-
-        const category = this.getAttribute('data-category');
-        filterAndSearchItems(category, searchInput.value);
-    });
-});
-
-// =======================================================
-// 搜尋功能
-// =======================================================
-if (searchInput) {
-    searchInput.addEventListener('input', function() {
-        const activeButton = document.querySelector('.filters button.active');
-        const category = activeButton ? activeButton.getAttribute('data-category') : 'All';
-        filterAndSearchItems(category, this.value);
-    });
-}
-
-// =======================================================
-// 篩選 + 搜尋合併函式
-// =======================================================
-function filterAndSearchItems(category, keyword) {
-    let items = getItems();
-
-    if (category && category !== 'All') {
-        items = items.filter(i => i.category === category);
-    }
-
-    if (keyword) {
-        const lowerKeyword = keyword.toLowerCase();
-        items = items.filter(i => i.itemName.toLowerCase().includes(lowerKeyword) || i.description.toLowerCase().includes(lowerKeyword));
-    }
-
-    renderItems(items);
-}
-
-// =======================================================
-// 初始化
-// =======================================================
-document.addEventListener('DOMContentLoaded', () => {
-    renderItems(getItems());
-});
+render(getItems());
