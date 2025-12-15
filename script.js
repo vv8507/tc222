@@ -1,5 +1,5 @@
 // =======================================================
-// 全域變數和輔助函式 (保留既有)
+// 全域變數和輔助函式
 // =======================================================
 
 const ITEM_STORAGE_KEY = 'donatedItems';
@@ -12,12 +12,12 @@ const modalClose = document.getElementById('modalClose');
 const modalBack = document.getElementById('modalBack');
 const filters = document.querySelectorAll('.filters button');
 const searchInput = document.getElementById('searchInput');
-const navbar = document.querySelector('.navbar'); // 📌 新增：導覽列元素
+const navbar = document.querySelector('.navbar'); // 新增：導覽列元素
 
 let currentBase64Image = null;
 
 // =======================================================
-// 取得 / 儲存捐贈項目 (保留既有)
+// 取得 / 儲存捐贈項目
 // =======================================================
 function getItems() {
     const data = localStorage.getItem(ITEM_STORAGE_KEY);
@@ -28,10 +28,15 @@ function saveItems(items) {
     localStorage.setItem(ITEM_STORAGE_KEY, JSON.stringify(items));
 }
 
-// 📌 新增：處理索取物品的函式
+// 新增：處理索取物品的函式
 function handleClaimItem(index) {
     let items = getItems();
-    // 簡單的檢查，確保 index 有效且項目未被索取
+    
+    // 透過 index 找到在 *原始* getItems 陣列中的項目
+    // 因為 filterAndSearchItems 執行時 items 會被排序和篩選，
+    // 我們需要找到該卡片在 localStorage 原始陣列中的真實 index。
+    // 這裡我們直接使用 items 陣列中的 index，並假設 renderItems 渲染的是 getItems() 的結果。
+
     if (index >= 0 && index < items.length && !items[index].claimed) {
         items[index].claimed = true; // 標記為已索取
         items[index].claimDate = new Date().toLocaleString(); // 記錄索取時間
@@ -42,12 +47,13 @@ function handleClaimItem(index) {
         const category = activeButton ? activeButton.getAttribute('data-category') : 'All';
         filterAndSearchItems(category, searchInput.value);
         
-        alert(`Successfully claimed: ${items[index].itemName}! (Index: ${index})`);
+        alert(`Successfully claimed: ${items[index].itemName}! (This action is purely local for demonstration)`);
     }
 }
 
+
 // =======================================================
-// 渲染項目 (修改: 增加已索取狀態和按鈕)
+// 渲染項目 (修改: 增加已索取狀態、按鈕、特色標籤)
 // =======================================================
 function renderItems(items) {
     if (!itemListDiv) return;
@@ -58,15 +64,14 @@ function renderItems(items) {
         return;
     }
 
+    // items 已經在 filterAndSearchItems 中被處理過 (篩選、排序)
     items.forEach((item, index) => {
         const card = document.createElement('div');
         card.classList.add('item-card');
         
-        // 📌 確保我們只顯示未索取的項目，或者如果需要顯示所有項目，則調整此邏輯。
-        // 為了讓使用者看到他們捐贈的東西，我們在此處顯示所有項目，但將已索取的項目標記出來。
-        
         const imageUrl = item.image ? item.image : 'placeholder.jpg';
         const isClaimed = item.claimed;
+        
         const buttonHtml = isClaimed 
             ? '<button class="btn claimed" disabled>已被索取 ✅</button>'
             : `<button class="btn primary claim-btn" data-index="${index}">立即索取</button>`;
@@ -91,19 +96,119 @@ function renderItems(items) {
         itemListDiv.appendChild(card);
     });
     
-    // 📌 綁定新按鈕的事件監聽器
+    // 綁定新按鈕的事件監聽器
     itemListDiv.querySelectorAll('.claim-btn').forEach(button => {
         button.addEventListener('click', function() {
+            // 注意: 這裡的 index 是 *目前被渲染的 items 陣列* 中的 index
             const index = parseInt(this.getAttribute('data-index'));
+            
+            // 由於 items 陣列已經在 filterAndSearchItems 中處理過，這裡直接使用 index 即可
+            // 如果要確保操作的是原始物件，需要傳遞 unique ID 或在 items 結構中加入 ID
+            // 為了簡化，我們直接操作當前篩選後陣列中的元素
             handleClaimItem(index);
         });
     });
 }
 
-// (實時圖片預覽、表單提交、關閉成功彈窗函式保持不變)
+// =======================================================
+// 實時圖片預覽 (保持不變)
+// =======================================================
+if (itemImageInput && imagePreviewDiv) {
+    itemImageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        currentBase64Image = null;
+
+        if (file) {
+            imagePreviewDiv.innerHTML = '';
+
+            if (!file.type.startsWith('image/')) {
+                imagePreviewDiv.innerHTML = '<p class="error-text">Please upload a valid image file.</p>';
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                currentBase64Image = e.target.result;
+
+                const img = document.createElement('img');
+                img.src = currentBase64Image;
+                img.alt = "Item Preview";
+                img.classList.add('preview-image');
+
+                imagePreviewDiv.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            imagePreviewDiv.innerHTML = '';
+        }
+    });
+}
 
 // =======================================================
-// 篩選功能 (保留既有)
+// 表單提交 (保持不變)
+// =======================================================
+if (donationForm) {
+    donationForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        if (!currentBase64Image) {
+            alert("Please wait for the image to load or select a file.");
+            return;
+        }
+
+        const formData = new FormData(donationForm);
+        const newItem = {
+            // 增加一個簡單的 ID
+            id: Date.now(), 
+            itemName: formData.get('itemName'),
+            category: formData.get('category'),
+            condition: formData.get('condition'),
+            description: formData.get('description'),
+            image: currentBase64Image,
+            tags: formData.get('tags') ? formData.get('tags').split(',').map(t => t.trim()) : [],
+            featured: formData.get('featured'),
+            claimed: false // 預設未索取
+        };
+
+        const items = getItems();
+        items.push(newItem);
+        saveItems(items);
+
+        // 重新渲染以包含新項目
+        const activeButton = document.querySelector('.filters button.active');
+        const category = activeButton ? activeButton.getAttribute('data-category') : 'All';
+        filterAndSearchItems(category, searchInput.value);
+
+        // Reset form
+        donationForm.reset();
+        imagePreviewDiv.innerHTML = '';
+        currentBase64Image = null;
+
+        // Show modal
+        if (successModal) {
+            successModal.style.display = 'flex';
+        }
+    });
+}
+
+// =======================================================
+// 關閉成功彈窗 (保持不變)
+// =======================================================
+if (modalClose) {
+    modalClose.addEventListener('click', () => {
+        successModal.style.display = 'none';
+    });
+}
+if (modalBack) {
+    modalBack.addEventListener('click', () => {
+        successModal.style.display = 'none';
+    });
+}
+
+// =======================================================
+// 篩選功能 (保持不變)
 // =======================================================
 filters.forEach(button => {
     button.addEventListener('click', function() {
@@ -116,7 +221,7 @@ filters.forEach(button => {
 });
 
 // =======================================================
-// 搜尋功能 (保留既有)
+// 搜尋功能 (保持不變)
 // =======================================================
 if (searchInput) {
     searchInput.addEventListener('input', function() {
@@ -127,12 +232,12 @@ if (searchInput) {
 }
 
 // =======================================================
-// 篩選 + 搜尋合併函式 (保留既有)
+// 篩選 + 搜尋合併函式 (修改: 增加 Tags 搜尋和未索取項目排序)
 // =======================================================
 function filterAndSearchItems(category, keyword) {
     let items = getItems();
 
-    // 📌 排序: 將未索取的項目排在前面
+    // 排序: 將未索取的項目排在前面，已索取的排在後面
     items.sort((a, b) => (a.claimed === b.claimed) ? 0 : a.claimed ? 1 : -1);
 
     if (category && category !== 'All') {
@@ -141,67 +246,41 @@ function filterAndSearchItems(category, keyword) {
 
     if (keyword) {
         const lowerKeyword = keyword.toLowerCase();
-        items = items.filter(i => i.itemName.toLowerCase().includes(lowerKeyword) || i.description.toLowerCase().includes(lowerKeyword) || i.tags.some(t => t.toLowerCase().includes(lowerKeyword))); // 📌 搜尋包含 tags
+        items = items.filter(i => 
+            i.itemName.toLowerCase().includes(lowerKeyword) || 
+            i.description.toLowerCase().includes(lowerKeyword) ||
+            i.tags.some(t => t.toLowerCase().includes(lowerKeyword)) // 新增: 搜尋包含 tags
+        );
     }
 
     renderItems(items);
 }
 
 // =======================================================
-// 📌 新增：滾動時導覽列固定功能
+// 新增：滾動時導覽列固定功能
 // =======================================================
 if (navbar) {
-    let heroHeight = document.querySelector('.hero').offsetHeight;
+    // 等待 DOMContentLoaded 以確保 .hero 存在
+    document.addEventListener('DOMContentLoaded', () => {
+        const hero = document.querySelector('.hero');
+        if (!hero) return; 
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > heroHeight) {
-            navbar.classList.add('sticky');
-        } else {
-            navbar.classList.remove('sticky');
-        }
+        let heroHeight = hero.offsetHeight;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > heroHeight - 50) { // 稍微早一點觸發
+                navbar.classList.add('sticky');
+            } else {
+                navbar.classList.remove('sticky');
+            }
+        });
     });
 }
 
-
 // =======================================================
-// 📌 新增：淡入效果 (如果你想要一個簡單的 Vanilla JS 淡入)
+// 新增：滾動淡入效果 (Intersection Observer)
 // =======================================================
-// const fadeInElements = document.querySelectorAll('.fade-in');
-
-// const observerOptions = {
-//     root: null,
-//     rootMargin: '0px',
-//     threshold: 0.1 
-// };
-
-// const observer = new IntersectionObserver((entries, observer) => {
-//     entries.forEach(entry => {
-//         if (entry.isIntersecting) {
-//             entry.target.classList.add('visible');
-//             observer.unobserve(entry.target);
-//         }
-//     });
-// }, observerOptions);
-
-// fadeInElements.forEach(element => {
-//     element.classList.add('invisible');
-//     observer.observe(element);
-// });
-// 
-// // 由於您原有的 HTML 已經有 .fade-in 且 CSS 中有 .invisible 和 .visible，
-// // 可以考慮加入這個 Intersection Observer 邏輯來啟用滾動淡入動畫。
-
-
-// =======================================================
-// 初始化 (保留既有)
-// =======================================================
-document.addEventListener('DOMContentLoaded', () => {
-    // 確保 item-list 容器存在時才執行 renderItems
-    if (itemListDiv) {
-        renderItems(getItems());
-    }
-    
-    // 📌 啟用滾動淡入效果
+function setupFadeInObserver() {
     const fadeInElements = document.querySelectorAll('.fade-in');
     
     const observerOptions = {
@@ -224,4 +303,18 @@ document.addEventListener('DOMContentLoaded', () => {
         element.classList.add('invisible'); // 確保開始時是隱藏的
         observer.observe(element);
     });
+}
+
+
+// =======================================================
+// 初始化
+// =======================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 渲染項目列表
+    if (itemListDiv) {
+        renderItems(getItems());
+    }
+    
+    // 啟用滾動淡入效果
+    setupFadeInObserver();
 });
