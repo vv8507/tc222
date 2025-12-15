@@ -1,147 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
 <title>Donation Sharing Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-content">
-    <h1>Donation Sharing Platform</h1>
-    <p class="subtitle">Give unused items a second life — help your community, shrink waste.</p>
-    <div class="hero-actions">
-      <a href="#donate" class="btn primary">Start Donating</a>
-      <a href="#items" class="btn outline">Browse Items</a>
-    </div>
-  </div>
-  <div class="hero-decor decor-1"></div>
-  <div class="hero-decor decor-2"></div>
-</header>
-
-<!-- NAV -->
-<nav class="navbar">
-  <div class="nav-inner">
-    <ul>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#items">Items</a></li>
-      <li><a href="#donate">Donate</a></li>
-      <li><a href="#stories">Stories</a></li>
-      <li><a href="#about">About</a></li>
-    </ul>
-
-    <!-- Auth -->
-    <div class="auth-area" id="authArea">
-      <button class="btn outline small" id="loginBtn">Login</button>
-      <button class="btn primary small" id="registerBtn">Register</button>
-    </div>
-  </div>
-</nav>
-
-<main>
-
-<section id="features" class="section">
-  <h2 class="section-title">Why choose our platform?</h2>
-  <div class="features-grid">
-    <div class="feature-card"><div class="feature-emoji">🌱</div><h3>Reduce Waste</h3><p>Give items another life.</p></div>
-    <div class="feature-card"><div class="feature-emoji">🤝</div><h3>Help Community</h3><p>Support people nearby.</p></div>
-    <div class="feature-card"><div class="feature-emoji">⚡</div><h3>Fast & Easy</h3><p>Upload and share quickly.</p></div>
-    <div class="feature-card"><div class="feature-emoji">🔒</div><h3>Safe</h3><p>Community moderation.</p></div>
-  </div>
-</section>
-
-<section id="items" class="section">
-  <h2 class="section-title">Available Items</h2>
-
-  <div class="controls">
-    <div class="filters">
-      <button class="filter active" data-category="All">All</button>
-      <button class="filter" data-category="Books">Books</button>
-      <button class="filter" data-category="Appliances">Appliances</button>
-      <button class="filter" data-category="Apparel">Apparel</button>
-      <button class="filter" data-category="Others">Others</button>
-    </div>
-    <div class="search-wrap">
-      <input id="searchInput" placeholder="Search items..." />
-    </div>
-  </div>
-
-  <div id="item-list" class="grid"></div>
-</section>
-
-<section id="donate" class="section donate-section">
-  <h2 class="section-title">Donate an Item</h2>
-
-  <form id="donation-form" class="form">
-    <div class="form-group">
-      <label>Item Name</label>
-      <input name="itemName" required>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Category</label>
-        <select name="category" required>
-          <option value="">Select</option>
-          <option>Books</option>
-          <option>Appliances</option>
-          <option>Apparel</option>
-          <option>Others</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Condition</label>
-        <select name="condition">
-          <option>Good</option>
-          <option>Like New</option>
-          <option>Fair</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Description</label>
-      <textarea name="description" required></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Image</label>
-      <input type="file" id="itemImage" required>
-      <div id="imagePreview" class="image-preview"></div>
-    </div>
-
-    <button class="btn primary full">Donate</button>
-  </form>
-</section>
-
-</main>
-
-<!-- AUTH MODAL -->
-<div id="auth-modal" class="modal">
-  <div class="modal-content">
-    <button class="modal-close" id="authClose">&times;</button>
-    <h3 id="authTitle">Login</h3>
-    <form id="authForm">
-      <div class="form-group">
-        <label>Email</label>
-        <input name="email" type="email" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input name="password" type="password" required>
-      </div>
-      <button class="btn primary full" id="authSubmit">Login</button>
-    </form>
-  </div>
+<!-- 右上角登入 -->
+<div class="auth-area-fixed" id="authArea">
+  <a href="login.html" class="btn outline small">Login</a>
 </div>
 
-<footer class="footer">
-  © 2025 Donation Sharing Platform
-</footer>
+<header class="hero">
+  <h1>Donation Sharing Platform</h1>
+  <p>Give unused items a second life.</p>
+</header>
+
+<main class="section">
+  <h2>Donate an Item</h2>
+
+  <form id="donation-form" class="form">
+    <input name="itemName" placeholder="Item name" required>
+    <textarea name="description" placeholder="Description" required></textarea>
+    <input type="file" id="itemImage" required>
+    <div id="imagePreview" class="image-preview"></div>
+    <button class="btn primary full">Donate</button>
+  </form>
+
+  <h2 style="margin-top:40px">Items</h2>
+  <div id="item-list" class="grid"></div>
+</main>
 
 <script src="script.js"></script>
 </body>
