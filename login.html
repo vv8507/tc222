@@ -1,36 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body class="login-page">
 
-  <div class="login-box">
-    <h2>Login</h2>
+<div class="login-box">
+  <h2 id="title">Login</h2>
 
-    <input
-      type="email"
-      id="loginEmail"
-      placeholder="Email"
-    >
+  <form id="loginForm">
+    <input type="text" name="nickname" placeholder="Nickname" style="display:none">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button class="btn primary full">Login</button>
+  </form>
 
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Password"
-    >
+  <p class="switch">
+    No account?
+    <a href="#" id="toggle">Register</a>
+  </p>
+</div>
 
-    <button class="btn primary full" onclick="login()">
-      Login
-    </button>
+<script>
+const USER_KEY='users';
+const CURRENT_USER='currentUser';
+const form=document.getElementById('loginForm');
+const toggle=document.getElementById('toggle');
+const title=document.getElementById('title');
+let mode='login';
 
-    <div class="switch">
-      <a href="register.html">Create account</a>
-    </div>
-  </div>
+function getUsers(){
+  return JSON.parse(localStorage.getItem(USER_KEY))||[];
+}
 
-  <script src="script.js"></script>
+toggle.onclick=()=>{
+  mode=mode==='login'?'register':'login';
+  title.textContent=mode==='login'?'Login':'Register';
+  form.querySelector('button').textContent=title.textContent;
+  form.nickname.style.display=mode==='register'?'block':'none';
+  form.nickname.required=mode==='register';
+};
+
+form.onsubmit=e=>{
+  e.preventDefault();
+  const email=form.email.value;
+  const pw=form.password.value;
+  const nickname=form.nickname.value;
+  let users=getUsers();
+
+  if(mode==='register'){
+    if(users.find(u=>u.email===email)) return alert('Account exists');
+    users.push({email,pw,nickname});
+    localStorage.setItem(USER_KEY,JSON.stringify(users));
+  }else{
+    const user=users.find(u=>u.email===email&&u.pw===pw);
+    if(!user) return alert('Wrong login');
+    localStorage.setItem(CURRENT_USER,JSON.stringify(user));
+    location.href='index.html';
+    return;
+  }
+
+  localStorage.setItem(CURRENT_USER,JSON.stringify({email,nickname}));
+  location.href='index.html';
+};
+</script>
+
 </body>
 </html>
