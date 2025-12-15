@@ -1,60 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Login</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-page">
 
-<div class="login-box">
-  <h2 id="title">Login</h2>
+  <div class="login-box">
+    <h2>Login</h2>
 
-  <form id="loginForm">
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button class="btn primary full">Login</button>
-  </form>
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="Email"
+    >
 
-  <p class="switch">
-    No account?
-    <a href="#" id="toggle">Register</a>
-  </p>
-</div>
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Password"
+    >
 
-<script>
-const USER_KEY='users';
-const CURRENT_USER='currentUser';
-const form=document.getElementById('loginForm');
-const title=document.getElementById('title');
-const toggle=document.getElementById('toggle');
-let mode='login';
+    <!-- 🔥 關鍵：一定要有 onclick="login()" -->
+    <button class="btn primary full" onclick="login()">
+      Login
+    </button>
 
-function getUsers(){return JSON.parse(localStorage.getItem(USER_KEY))||[]}
+    <div class="switch">
+      <a href="register.html">Create account</a>
+    </div>
+  </div>
 
-toggle.onclick=()=>{
-  mode=mode==='login'?'register':'login';
-  title.textContent=mode==='login'?'Login':'Register';
-  form.querySelector('button').textContent=title.textContent;
-};
-
-form.onsubmit=e=>{
-  e.preventDefault();
-  const email=form.email.value;
-  const pw=form.password.value;
-  let users=getUsers();
-
-  if(mode==='register'){
-    if(users.find(u=>u.email===email)) return alert('Account exists');
-    users.push({email,pw});
-    localStorage.setItem(USER_KEY,JSON.stringify(users));
-  }else{
-    if(!users.find(u=>u.email===email&&u.pw===pw)) return alert('Wrong login');
-  }
-
-  localStorage.setItem(CURRENT_USER,JSON.stringify({email}));
-  location.href='index.html';
-};
-</script>
+  <!-- 🔥 一定要在最下面 -->
+  <script src="script.js"></script>
 </body>
 </html>
