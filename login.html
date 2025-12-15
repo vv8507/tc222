@@ -18,55 +18,41 @@
 
   <p class="switch">
     No account?
-    <a href="#" id="toRegister">Register</a>
+    <a href="#" id="toggle">Register</a>
   </p>
 </div>
 
 <script>
-const USER_KEY = 'users';
-const CURRENT_USER = 'currentUser';
+const USER_KEY='users';
+const CURRENT_USER='currentUser';
+const form=document.getElementById('loginForm');
+const title=document.getElementById('title');
+const toggle=document.getElementById('toggle');
+let mode='login';
 
-const form = document.getElementById('loginForm');
-const title = document.getElementById('title');
-const switchBtn = document.getElementById('toRegister');
+function getUsers(){return JSON.parse(localStorage.getItem(USER_KEY))||[]}
 
-let mode = 'login';
-
-function getUsers(){
-  return JSON.parse(localStorage.getItem(USER_KEY)) || [];
-}
-
-switchBtn.onclick = () => {
-  mode = mode === 'login' ? 'register' : 'login';
-  title.textContent = mode === 'login' ? 'Login' : 'Register';
-  form.querySelector('button').textContent = title.textContent;
-  switchBtn.textContent = mode === 'login' ? 'Register' : 'Login';
+toggle.onclick=()=>{
+  mode=mode==='login'?'register':'login';
+  title.textContent=mode==='login'?'Login':'Register';
+  form.querySelector('button').textContent=title.textContent;
 };
 
-form.onsubmit = e => {
+form.onsubmit=e=>{
   e.preventDefault();
+  const email=form.email.value;
+  const pw=form.password.value;
+  let users=getUsers();
 
-  const email = form.email.value;
-  const password = form.password.value;
-  let users = getUsers();
-
-  if(mode === 'register'){
-    if(users.find(u => u.email === email)){
-      alert('Account exists');
-      return;
-    }
-    users.push({email, password});
-    localStorage.setItem(USER_KEY, JSON.stringify(users));
-  } else {
-    const user = users.find(u => u.email === email && u.password === password);
-    if(!user){
-      alert('Wrong login');
-      return;
-    }
+  if(mode==='register'){
+    if(users.find(u=>u.email===email)) return alert('Account exists');
+    users.push({email,pw});
+    localStorage.setItem(USER_KEY,JSON.stringify(users));
+  }else{
+    if(!users.find(u=>u.email===email&&u.pw===pw)) return alert('Wrong login');
   }
-
-  localStorage.setItem(CURRENT_USER, JSON.stringify({email}));
-  location.href = 'index.html';
+  localStorage.setItem(CURRENT_USER,JSON.stringify({email}));
+  location.href='index.html';
 };
 </script>
 
