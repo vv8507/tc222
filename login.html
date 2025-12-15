@@ -51,10 +51,10 @@ form.onsubmit=e=>{
   }else{
     if(!users.find(u=>u.email===email&&u.pw===pw)) return alert('Wrong login');
   }
+
   localStorage.setItem(CURRENT_USER,JSON.stringify({email}));
   location.href='index.html';
 };
 </script>
-
 </body>
 </html>
