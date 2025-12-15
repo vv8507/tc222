@@ -1,360 +1,392 @@
+/* =======================================================
+   Base & Reset
+   ======================================================= */
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:'Quicksand',sans-serif;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Quicksand',sans-serif;
 }
 
 body{
-  background:#f6f7fb;
-  color:#333;
-  line-height:1.6;
+  background:#f6f7fb;
+  color:#333;
+  line-height:1.6;
 }
 
-/* ===== Buttons ===== */
+/* =======================================================
+   Buttons
+   ======================================================= */
 .btn{
-  padding:10px 20px;
-  border-radius:25px;
-  cursor:pointer;
-  border:none;
-  font-size:14px;
-  text-decoration:none;
-  display:inline-block;
+  padding:10px 20px;
+  border-radius:25px;
+  cursor:pointer;
+  border:none;
+  font-size:14px;
+  text-decoration:none;
+  display:inline-block;
 }
 
 .btn.primary{
-  background:#5c7cfa;
-  color:#fff;
+  background:#5c7cfa;
+  color:#fff;
 }
 
 .btn.outline{
-  background:transparent;
-  border:2px solid #5c7cfa;
-  color:#5c7cfa;
+  background:transparent;
+  border:2px solid #5c7cfa;
+  color:#5c7cfa;
 }
 
 .btn.small{
-  padding:6px 14px;
-  font-size:13px;
+  padding:6px 14px;
+  font-size:13px;
 }
 
 .btn.full{
-  width:100%;
+  width:100%;
 }
 
-/* ===== Auth Area ===== */
-.auth-area-fixed{
-  position:fixed;
-  top:20px;
-  right:20px;
-  z-index:1000;
+/* =======================================================
+   Auth Area (放在主頁面 index.html 中)
+   ======================================================= */
+#authArea{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:1000;
+}
+#authArea button {
+    margin-left: 10px;
 }
 
-/* ===== Hero ===== */
+
+/* =======================================================
+   Hero
+   ======================================================= */
 .hero{
-  background:linear-gradient(135deg,#5c7cfa,#748ffc);
-  color:#fff;
-  padding:80px 20px 100px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  background:linear-gradient(135deg,#5c7cfa,#748ffc);
+  color:#fff;
+  padding:80px 20px 100px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
 }
 
 .hero h1{
-  font-size:42px;
-  margin-bottom:10px;
+  font-size:42px;
+  margin-bottom:10px;
 }
 
 .hero .subtitle{
-  font-size:18px;
-  opacity:.9;
-  margin-bottom:25px;
+  font-size:18px;
+  opacity:.9;
+  margin-bottom:25px;
 }
 
 .hero-actions .btn{
-  margin:0 8px;
+  margin:0 8px;
 }
 
 .hero-decor{
-  position:absolute;
-  width:200px;
-  height:200px;
-  border-radius:50%;
-  opacity:.2;
+  position:absolute;
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  opacity:.2;
 }
 
 .decor-1{
-  background:#fff;
-  top:-60px;
-  left:-60px;
+  background:#fff;
+  top:-60px;
+  left:-60px;
 }
 
 .decor-2{
-  background:#000;
-  bottom:-60px;
-  right:-60px;
+  background:#000;
+  bottom:-60px;
+  right:-60px;
 }
 
-/* ===== Navbar ===== */
+/* =======================================================
+   Navbar
+   ======================================================= */
 .navbar{
-  background:#fff;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-  position:sticky;
-  top:0;
-  z-index:10;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 .navbar ul{
-  display:flex;
-  justify-content:center;
-  list-style:none;
+  display:flex;
+  justify-content:center;
+  list-style:none;
 }
 
 .navbar a{
-  display:block;
-  padding:14px 20px;
-  color:#333;
-  text-decoration:none;
+  display:block;
+  padding:14px 20px;
+  color:#333;
+  text-decoration:none;
 }
 
 .navbar a:hover{
-  background:#f1f3ff;
+  background:#f1f3ff;
 }
 
-/* ===== Sections ===== */
+/* =======================================================
+   Sections & Grid
+   ======================================================= */
 .section{
-  padding:60px 20px;
-  max-width:1100px;
-  margin:auto;
+  padding:60px 20px;
+  max-width:1100px;
+  margin:auto;
 }
 
 .section-title{
-  text-align:center;
-  font-size:30px;
-  margin-bottom:40px;
-}
-
-/* ===== Features ===== */
-.features-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:25px;
-}
-
-.feature-card{
-  background:#fff;
-  padding:30px 20px;
-  border-radius:18px;
-  text-align:center;
-  box-shadow:0 6px 15px rgba(0,0,0,.08);
-}
-
-.feature-emoji{
-  font-size:40px;
-  margin-bottom:10px;
-}
-
-/* ===== Items ===== */
-.controls{
-  display:flex;
-  flex-wrap:wrap;
-  gap:15px;
-  justify-content:space-between;
-  margin-bottom:25px;
-}
-
-.filters{
-  display:flex;
-  gap:10px;
-}
-
-.filter{
-  padding:8px 16px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  background:#fff;
-  cursor:pointer;
-}
-
-.filter.active{
-  background:#5c7cfa;
-  color:#fff;
-  border-color:#5c7cfa;
-}
-
-.search-wrap input{
-  padding:8px 14px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  min-width:220px;
+  text-align:center;
+  font-size:30px;
+  margin-bottom:40px;
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+
+/* Features */
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+}
+
+.feature-card{
+  background:#fff;
+  padding:30px 20px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 6px 15px rgba(0,0,0,.08);
+}
+
+.feature-emoji{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+/* =======================================================
+   Items (List & Controls)
+   ======================================================= */
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  justify-content:space-between;
+  margin-bottom:25px;
+}
+
+.filters{
+  display:flex;
+  gap:10px;
+}
+
+.filter{
+  padding:8px 16px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  background:#fff;
+  cursor:pointer;
+}
+
+.filter.active{
+  background:#5c7cfa;
+  color:#fff;
+  border-color:#5c7cfa;
+}
+
+.search-wrap input{
+  padding:8px 14px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  min-width:220px;
 }
 
 .item-card{
-  background:#fff;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 8px 18px rgba(0,0,0,.08);
-  display:flex;
-  flex-direction:column;
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
 }
 
 .item-card img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  display:block;
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  display:block;
 }
 
 .item-info{
-  padding:15px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
 
 .item-info h4{
-  font-size:18px;
+  font-size:18px;
 }
 
 .item-info p{
-  font-size:14px;
-  color:#555;
+  font-size:14px;
+  color:#555;
 }
 
 .tag{
-  align-self:flex-start;
-  background:#edf2ff;
-  color:#5c7cfa;
-  padding:4px 12px;
-  border-radius:20px;
-  font-size:12px;
+  align-self:flex-start;
+  background:#edf2ff;
+  color:#5c7cfa;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:12px;
 }
 
-/* ===== Donate ===== */
+/* =======================================================
+   Donate
+   ======================================================= */
 .donate-section{
-  background:#fff;
-  border-radius:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  background:#fff;
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  padding: 40px; /* 增加內邊距 */
 }
 
 .form{
-  max-width:600px;
-  margin:auto;
+  max-width:600px;
+  margin:auto;
 }
 
 .form-group{
-  margin-bottom:18px;
+  margin-bottom:18px;
 }
 
 .form-group label{
-  display:block;
-  margin-bottom:6px;
-  font-weight:600;
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select{
-  width:100%;
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid #ccc;
+  width:100%;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid #ccc;
 }
 
 .form-row{
-  display:flex;
-  gap:15px;
+  display:flex;
+  gap:15px;
 }
 
 .form-row .form-group{
-  flex:1;
+  flex:1;
 }
 
 .image-preview img{
-  width:100%;
-  max-height:200px;
-  object-fit:cover;
-  border-radius:12px;
-  margin-top:10px;
+  width:100%;
+  max-height:200px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-top:10px;
 }
 
-/* ===== Stories ===== */
+/* =======================================================
+   Stories
+   ======================================================= */
 .stories-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
 }
 
 .story-card{
-  background:#fff;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 8px 18px rgba(0,0,0,.08);
+  background:#fff;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
 }
 
-/* ===== About ===== */
+/* =======================================================
+   About
+   ======================================================= */
 .about-content{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
 }
 
 .about-item{
-  background:#fff;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 8px 18px rgba(0,0,0,.08);
+  background:#fff;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
 }
 
-/* ===== Footer ===== */
+/* =======================================================
+   Footer
+   ======================================================= */
 .footer{
-  background:#222;
-  color:#aaa;
-  text-align:center;
-  padding:20px;
+  background:#222;
+  color:#aaa;
+  text-align:center;
+  padding:20px;
 }
 
-/* ===== Login Page ===== */
+/* =======================================================
+   Login Page (使用於 login.html)
+   ======================================================= */
 .login-page{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background-color: #5c7cfa; /* 統一背景色 */
 }
 
 .login-box{
-  background:#fff;
-  padding:35px 30px;
-  border-radius:25px;
-  width:320px;
-  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  background:#fff;
+  padding:35px 30px;
+  border-radius:25px;
+  width:320px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
 }
 
 .login-box h2{
-  text-align:center;
-  margin-bottom:20px;
+  text-align:center;
+  margin-bottom:20px;
+  color: #333;
 }
 
 .login-box input{
-  width:100%;
-  padding:10px;
-  margin-bottom:15px;
-  border-radius:12px;
-  border:1px solid #ccc;
+  width:100%;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:12px;
+  border:1px solid #ccc;
 }
 
 .switch{
-  text-align:center;
-  margin-top:10px;
+  text-align:center;
+  margin-top:10px;
 }
 
 .switch a{
-  color:#5c7cfa;
-  text-decoration:none;
+  color:#5c7cfa;
+  text-decoration:none;
 }
