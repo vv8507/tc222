@@ -36,13 +36,15 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .section-title { text-align: center; font-size: 36px; margin-bottom: 40px; color: #4caf50; } 
 
 /* =======================================================
-    FEATURES 網格修正：統一與 Stories/About Us 一致
+    FEATURES 網格修正 (Why choose our platform?)：加入居中
    ======================================================= */ 
 .features-grid { 
   display: grid; 
-  /* 統一 minmax 和 gap */
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
   gap: 25px; 
+  /* 🌟 新增：居中設定 🌟 */
+  max-width: 950px; /* 稍微縮小寬度 */
+  margin: 0 auto; 
 } 
 .feature-card { 
   background: #fff; 
@@ -61,7 +63,7 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .search-wrap input { padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; min-width: 240px; } 
 
 /* =======================================================
-    ITEMS 網格修正：緊湊居中 (保持上次修正)
+    ITEMS 網格修正：緊湊居中
    ======================================================= */ 
 .grid { 
   display: grid; 
@@ -116,23 +118,28 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .image-preview img { margin-top: 10px; max-height: 160px; border-radius: 10px; } 
 
 /* =======================================================
-    STORIES 網格 (保持原有設定，作為參考標準)
+    STORIES 網格修正 (Community Stories)：加入居中
    ======================================================= */ 
 .stories-grid { 
   display: grid; 
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
   gap: 25px; 
+  /* 🌟 新增：居中設定 🌟 */
+  max-width: 950px; /* 統一寬度 */
+  margin: 0 auto;
 } 
 .story-card { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
 
 /* =======================================================
-    ABOUT US 網格修正：統一與 Stories/Features 一致
+    ABOUT US 網格修正：加入居中
    ======================================================= */ 
 .about-content { 
   display: grid; 
-  /* 統一 minmax 和 gap */
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
   gap: 25px; 
+  /* 🌟 新增：居中設定 🌟 */
+  max-width: 750px; /* 針對只有三個項目時，可以更窄一點 */
+  margin: 0 auto; 
 } 
 .about-item { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
 
