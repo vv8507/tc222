@@ -8,8 +8,7 @@
 }
 
 body{
-  /* 背景色改回接近原始版本的淺灰色 */
-  background:#fafafa;
+  background:#f6f7fb; /* 保持您目前使用的背景色 */
   color:#333;
   line-height:1.6;
 }
@@ -17,32 +16,34 @@ body{
 /* ===== Buttons ===== */
 .btn{
   padding:10px 20px;
-  border-radius:30px; /* 稍微調整回最初的圓角 */
+  border-radius:25px;
   cursor:pointer;
   border:none;
   font-size:14px;
   text-decoration:none;
   display:inline-block;
-  transition: .3s;
+  transition: .3s; /* 加入過渡效果讓按鈕更平滑 */
 }
 
 .btn.primary{
-  background:#4caf50; /* 顏色改回: 綠色 */
+  background:#4caf50; /* 顏色替換: 綠色 */
   color:#fff;
 }
 
+/* 為了 hover 效果更自然，新增綠色的 hover 狀態 */
 .btn.primary:hover {
-  background: #43a047; /* 顏色改回: 深綠色 */
+  background: #43a047;
 }
 
 .btn.outline{
   background:transparent;
-  border:2px solid #4caf50; /* 顏色改回: 綠色 */
-  color:#4caf50; /* 顏色改回: 綠色 */
+  border:2px solid #4caf50; /* 顏色替換: 綠色 */
+  color:#4caf50; /* 顏色替換: 綠色 */
 }
 
+/* 為了 hover 效果更自然，新增綠色的 outline hover 狀態 */
 .btn.outline:hover {
-  background: #4caf50; /* 顏色改回: 綠色 */
+  background: #4caf50;
   color: #fff;
 }
 
@@ -59,43 +60,34 @@ body{
 .auth-area-fixed{
   position:fixed;
   top:20px;
-  right:30px; /* 稍微調整回右側邊緣 */
+  right:20px;
   z-index:1000;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 /* ===== Hero ===== */
 .hero{
-  /* 顏色改回: 綠色漸層 */
+  /* 顏色替換: 綠色漸層 */
   background:linear-gradient(135deg,#c8e6c9,#e8f5e9);
-  color:#333; /* 確保文字在淺色背景上清晰 */
-  padding:100px 20px; /* 調整回原始 Padding */
+  color:#333; /* 確保文字清晰 */
+  padding:80px 20px 100px;
   text-align:center;
   position:relative;
   overflow:hidden;
 }
 
 .hero h1{
-  font-size:48px; /* 調整回原始字體大小 */
-  margin-bottom:15px; /* 調整回原始間距 */
+  font-size:42px;
+  margin-bottom:10px;
 }
 
 .hero .subtitle{
   font-size:18px;
-  opacity:1;
-  margin-bottom:30px; /* 調整回原始間距 */
-}
-
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+  opacity:.9;
+  margin-bottom:25px;
 }
 
 .hero-actions .btn{
-  margin:0; /* 移除藍色版本中多餘的 margin */
+  margin:0 8px;
 }
 
 .hero-decor{
@@ -107,24 +99,24 @@ body{
 }
 
 .decor-1{
-  background:#66bb6a; /* 顏色改回: 淺綠色 */
-  top:-50px;
-  left:-50px;
+  background:#66bb6a; /* 顏色替換: 淺綠色 */
+  top:-60px;
+  left:-60px;
 }
 
 .decor-2{
-  background:#81c784; /* 顏色改回: 淺綠色 */
-  bottom:-100px;
-  right:-100px;
+  background:#81c784; /* 顏色替換: 淺綠色 */
+  bottom:-60px;
+  right:-60px;
 }
 
 /* ===== Navbar ===== */
 .navbar{
   background:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,.05); /* 調整陰影 */
-  position:static; /* 移除 sticky 讓它不黏在頂部，更接近原始版本 */
-  top:auto;
-  z-index:auto;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 .navbar ul{
@@ -135,64 +127,62 @@ body{
 
 .navbar a{
   display:block;
-  padding:15px 25px; /* 調整回原始 Padding */
+  padding:14px 20px;
   color:#333;
   text-decoration:none;
-  font-weight: 600;
 }
 
 .navbar a:hover{
-  background:transparent; /* 移除 hover 背景色 */
-  color: #4caf50; /* 顏色改回: 綠色 */
+  /* 顏色替換: 淺綠色 */
+  background:#e6f4ea;
+  color: #4caf50; /* 讓 hover 時文字變綠色 */
 }
 
 /* ===== Sections ===== */
 .section{
-  padding:70px 20px; /* 調整回原始 Padding */
-  max-width:1200px; /* 調整回原始最大寬度 */
+  padding:60px 20px;
+  max-width:1100px;
   margin:auto;
 }
 
 .section-title{
   text-align:center;
-  font-size:36px; /* 調整回原始字體大小 */
+  font-size:30px;
   margin-bottom:40px;
-  color:#4caf50; /* 顏色改回: 綠色 */
+  /* 顏色替換: 綠色 */
+  color: #4caf50;
 }
 
-/* =======================================================
-    FEATURES 網格修正 (Why choose our platform?)：完美 2x2 宮格
-   ======================================================= */ 
+/* ===== Features ===== */
 .features-grid{
-  display:grid;
-  /* 強制 2 欄 */
-  grid-template-columns:repeat(2,1fr);
-  gap:25px;
-  /* 限制寬度並居中，達成 2x2 結構 */
-  max-width: 500px;
+  /* 保持您上次的排版設置：強制 2x2 宮格 */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  max-width: 500px; 
   margin: 0 auto;
+  gap:25px;
 }
 
 .feature-card{
   background:#fff;
-  padding:30px; 
-  border-radius:16px; 
+  padding:30px 20px;
+  border-radius:18px;
   text-align:center;
-  box-shadow:0 8px 20px rgba(0,0,0,.08); /* 調整陰影 */
+  box-shadow:0 6px 15px rgba(0,0,0,.08);
 }
 
 .feature-emoji{
   font-size:40px;
-  margin-bottom:15px;
+  margin-bottom:10px;
 }
 
-/* ===== Items (Controls & Grid) ===== */
+/* ===== Items ===== */
 .controls{
   display:flex;
   flex-wrap:wrap;
-  gap:20px; /* 調整間距 */
+  gap:15px;
   justify-content:space-between;
-  margin-bottom:30px;
+  margin-bottom:25px;
 }
 
 .filters{
@@ -201,40 +191,40 @@ body{
 }
 
 .filter{
-  padding:8px 18px; /* 調整 Padding */
+  padding:8px 16px;
   border-radius:20px;
   border:1px solid #ccc;
   background:#fff;
   cursor:pointer;
 }
 
-.filter.active, .filter:hover{
-  background:#4caf50; /* 顏色改回: 綠色 */
+.filter.active{
+  background:#4caf50; /* 顏色替換: 綠色 */
   color:#fff;
-  border-color:#4caf50; /* 顏色改回: 綠色 */
+  border-color:#4caf50; /* 顏色替換: 綠色 */
 }
 
 .search-wrap input{
-  padding:10px 15px; /* 調整 Padding */
+  padding:8px 14px;
   border-radius:20px;
   border:1px solid #ccc;
-  min-width:240px; /* 調整最小寬度 */
+  min-width:220px;
 }
 
-/* 物品列表網格 (Items Grid) */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); /* 調整回較小的 minmax 寬度並居中 */
-  gap:15px; /* 調整間距 */
-  max-width: 980px; /* 居中寬度 */
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+  /* 保持居中設置 */
+  max-width: 1100px; 
   margin: 0 auto;
 }
 
 .item-card{
   background:#fff;
-  border-radius:14px; /* 調整圓角 */
+  border-radius:18px;
   overflow:hidden;
-  box-shadow:0 8px 20px rgba(0,0,0,.08); /* 調整陰影 */
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
   display:flex;
   flex-direction:column;
 }
@@ -247,26 +237,25 @@ body{
 }
 
 .item-info{
-  padding:18px; /* 調整 Padding */
-  display:block;
-  gap:0;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
 
 .item-info h4{
   font-size:18px;
-  margin-bottom:6px;
 }
 
 .item-info p{
   font-size:14px;
   color:#555;
-  margin-bottom: 10px;
 }
 
 .tag{
-  align-self:auto;
-  background:#e6f4ea; /* 顏色改回: 淺綠色 */
-  color:#2e7d32; /* 顏色改回: 深綠色 */
+  align-self:flex-start;
+  background:#e6f4ea; /* 顏色替換: 淺綠色 */
+  color:#2e7d32; /* 顏色替換: 深綠色 */
   padding:4px 12px;
   border-radius:20px;
   font-size:12px;
@@ -274,9 +263,9 @@ body{
 
 /* ===== Donate ===== */
 .donate-section{
-  background:#f1f8e9; /* 顏色改回: 淺綠色 */
-  border-radius:30px; /* 調整圓角 */
-  box-shadow:none; /* 移除藍色版本的陰影 */
+  background:#fff;
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
 
 .form{
@@ -285,7 +274,7 @@ body{
 }
 
 .form-group{
-  margin-bottom:20px; /* 調整間距 */
+  margin-bottom:18px;
 }
 
 .form-group label{
@@ -298,57 +287,52 @@ body{
 .form-group textarea,
 .form-group select{
   width:100%;
-  padding:10px; /* 調整 Padding */
-  border-radius:10px; /* 調整圓角 */
+  padding:10px 14px;
+  border-radius:12px;
   border:1px solid #ccc;
 }
 
 .form-row{
   display:flex;
-  gap:20px; /* 調整間距 */
-  flex-wrap: wrap;
+  gap:15px;
 }
 
 .form-row .form-group{
-  flex:auto;
+  flex:1;
 }
 
 .image-preview img{
-  max-height:160px; /* 調整高度 */
+  width:100%;
+  max-height:200px;
   object-fit:cover;
-  border-radius:10px; /* 調整圓角 */
+  border-radius:12px;
   margin-top:10px;
-  width: auto;
 }
 
-/* =======================================================
-    STORIES 網格修正：多欄位居中
-   ======================================================= */ 
+/* ===== Stories ===== */
 .stories-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); /* 調整回較小的 minmax 寬度 */
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:25px;
-  /* 居中設置 */
-  max-width: 950px; 
+  /* 保持居中設置 */
+  max-width: 1100px; 
   margin: 0 auto;
 }
 
 .story-card{
   background:#fff;
   padding:25px;
-  border-radius:16px; /* 調整圓角 */
-  box-shadow:0 8px 20px rgba(0,0,0,.08); /* 調整陰影 */
+  border-radius:20px;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
 }
 
-/* =======================================================
-    ABOUT US 網格修正：單欄居中
-   ======================================================= */ 
+/* ===== About ===== */
 .about-content{
   display:grid;
-  /* 強制單欄 */
+  /* 保持您上次的排版設置：強制單欄 */
   grid-template-columns:1fr;
   gap:25px;
-  /* 限制寬度並居中 */
+  /* 保持居中設置 */
   max-width: 400px;
   margin: 0 auto;
 }
@@ -356,17 +340,16 @@ body{
 .about-item{
   background:#fff;
   padding:25px;
-  border-radius:16px; /* 調整圓角 */
-  box-shadow:0 8px 20px rgba(0,0,0,.08); /* 調整陰影 */
+  border-radius:20px;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
 }
 
 /* ===== Footer ===== */
 .footer{
-  background:#2e7d32; /* 顏色改回: 深綠色 */
-  color:#fff;
+  background:#2e7d32; /* 顏色替換: 深綠色 */
+  color:#aaa;
   text-align:center;
   padding:20px;
-  margin-top: 60px;
 }
 
 /* ===== Login Page ===== */
@@ -375,16 +358,14 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background: #f5f5f5;
 }
 
 .login-box{
   background:#fff;
-  padding:40px; /* 調整 Padding */
-  border-radius:16px; /* 調整圓角 */
-  width:100%;
-  max-width:360px; /* 調整最大寬度 */
-  box-shadow:0 10px 30px rgba(0,0,0,.15); /* 調整陰影 */
+  padding:35px 30px;
+  border-radius:25px;
+  width:320px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
 }
 
 .login-box h2{
@@ -394,18 +375,18 @@ body{
 
 .login-box input{
   width:100%;
-  padding:12px; /* 調整 Padding */
+  padding:10px;
   margin-bottom:15px;
-  border-radius:10px; /* 調整圓角 */
+  border-radius:12px;
   border:1px solid #ccc;
 }
 
 .switch{
   text-align:center;
-  margin-top:15px; /* 調整間距 */
+  margin-top:10px;
 }
 
 .switch a{
-  color:#4caf50; /* 顏色改回: 綠色 */
+  color:#4caf50; /* 顏色替換: 綠色 */
   text-decoration:none;
 }
