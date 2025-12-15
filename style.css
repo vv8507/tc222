@@ -35,9 +35,22 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .section { padding: 70px 20px; max-width: 1200px; margin: auto; } 
 .section-title { text-align: center; font-size: 36px; margin-bottom: 40px; color: #4caf50; } 
 
-/* ===== Features ===== */ 
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 25px; } 
-.feature-card { background: #fff; padding: 30px; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
+/* =======================================================
+    FEATURES 網格修正：統一與 Stories/About Us 一致
+   ======================================================= */ 
+.features-grid { 
+  display: grid; 
+  /* 統一 minmax 和 gap */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+  gap: 25px; 
+} 
+.feature-card { 
+  background: #fff; 
+  padding: 30px; 
+  border-radius: 16px; 
+  text-align: center; 
+  box-shadow: 0 8px 20px rgba(0,0,0,.08); 
+} 
 .feature-emoji { font-size: 40px; margin-bottom: 15px; } 
 
 /* ===== Controls ===== */ 
@@ -48,19 +61,13 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .search-wrap input { padding: 10px 15px; border-radius: 20px; border: 1px solid #ccc; min-width: 240px; } 
 
 /* =======================================================
-    ITEMS 網格修正：緊湊居中 (核心修正)
+    ITEMS 網格修正：緊湊居中 (保持上次修正)
    ======================================================= */ 
 .grid { 
   display: grid; 
-  /* 縮小最小寬度 (220px)，讓更多卡片可以塞入一行 */
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-  /* 縮小卡片間隔 */
   gap: 15px; 
-  
-  /* 🌟 核心修正：讓網格內容居中 🌟 */
-  /* 限制網格容器的最大寬度，讓它不會佔滿整個父區塊 */
   max-width: 980px; 
-  /* 將網格容器水平居中 */
   margin: 0 auto; 
 } 
 
@@ -72,7 +79,6 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
   display: flex; 
   flex-direction: column; 
 } 
-/* 確保圖片有固定尺寸，防止卡片高度不一 */
 .item-card img { 
   width: 100%; 
   height: 180px; 
@@ -109,12 +115,25 @@ body { font-family: 'Quicksand', sans-serif; background: #fafafa; color: #333; l
 .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; } 
 .image-preview img { margin-top: 10px; max-height: 160px; border-radius: 10px; } 
 
-/* ===== Stories ===== */ 
-.stories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 25px; } 
+/* =======================================================
+    STORIES 網格 (保持原有設定，作為參考標準)
+   ======================================================= */ 
+.stories-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+  gap: 25px; 
+} 
 .story-card { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
 
-/* ===== About ===== */ 
-.about-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 25px; } 
+/* =======================================================
+    ABOUT US 網格修正：統一與 Stories/Features 一致
+   ======================================================= */ 
+.about-content { 
+  display: grid; 
+  /* 統一 minmax 和 gap */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+  gap: 25px; 
+} 
 .about-item { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); } 
 
 /* ===== Footer ===== */ 
